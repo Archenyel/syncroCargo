@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import SideBar from "./SideBar";
 
 const Operations = () => {
   const [data, setData] = useState([]);
@@ -188,152 +189,161 @@ const Operations = () => {
   }, []);
 
   return (
-    <>
-      <button onClick={fetchUsers}> ver operaciones</button>
-      <br />
-      <div className="App">
-        <h1>Lista de Operaciones</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>empresa</th>
-              <th>tipo</th>
-              <th>operador</th>
-              <th>almacenista</th>
-              <th>producto</th>
-              <th>descripcion</th>
-              <th>cantidad</th>
-              <th>fecha fin</th>
-              <th>cortina</th>
-              <th>Estatus</th>
-              <th>Editar</th>
-              <th>Estatus</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.empresa}</td>
-                <td>{user.tipo}</td>
-                <td>{user.operador}</td>
-                <td>{user.almacenista}</td>
-                <td>{user.producto}</td>
-                <td>{user.descripcionOperacion}</td>
-                <td>{user.cantidad}</td>
-                <td>{user.fechaConclusionEstimada}</td>
-                <td>{user.cortina === 99 ? user.cortina : "sin asignar "}</td>
-                <td>{user.estatus}</td>
-                <td>
-                  <button class="bg-indigo-500"
-                    onClick={() => {
-                      editarCampos(user);
-                      setEditar(true);
-                    }}
-                  >
-                    {" "}
-                    Editar{" "}
-                  </button>
-                </td>
-                <td>
-                  <button onClick={() => cambiarEstatus(user.id)}>
+    <div class="min-h-screen bg-gray-50/50">
+      <SideBar />
+      <div className=" p-4 xl:ml-80">
+        <>
+          <div className="App">
+            <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">Lista de Operaciones</h1>
+          <button onClick={fetchUsers} className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"> ver operaciones</button>
+            <table className="table-auto text-center">
+              <thead className="border-4 border-sky-700 ">
+                <tr>
+                  <th>ID</th>
+                  <th>empresa</th>
+                  <th>tipo</th>
+                  <th>operador</th>
+                  <th>almacenista</th>
+                  <th>producto</th>
+                  <th>descripcion</th>
+                  <th>cantidad</th>
+                  <th>fecha fin</th>
+                  <th>cortina</th>
+                  <th>Estatus</th>
+                  <th>Editar</th>
+                  <th>Estatus</th>
+                </tr>
+              </thead>
+              <tbody className="border-4 border-sky-700">
+                {data.map((user) => (
+                  <tr key={user.id} className="border-3 border-sky-500">
+                    <td className="p-3 ">{user.id}</td>
+                    <td className="p-3 ">{user.empresa}</td>
+                    <td className="p-3 ">{user.tipo}</td>
+                    <td className="p-3 ">{user.operador}</td>
+                    <td className="p-3 ">{user.almacenista}</td>
+                    <td className="p-3 ">{user.producto}</td>
+                    <td className="p-3 ">{user.descripcionOperacion}</td>
+                    <td className="p-3 ">{user.cantidad}</td>
+                    <td className="p-3 ">{user.fechaConclusionEstimada}</td>
+                    <td className="p-3 ">
+                      {user.cortina === 99 ? user.cortina : "sin asignar "}
+                    </td>
+                    <td className="p-3 ">{user.estatus}</td>
+                    <td className="p-3 ">
+                      <button
+                        className="bg-orange-500 p-2 rounded text-white hover:bg-orange-300"
+                        onClick={() => {
+                          editarCampos(user);
+                          setEditar(true);
+                        }}
+                      >
+                        {" "}
+                        Editar{" "}
+                      </button>
+                    </td>
+                    <td className="p-3 ">
+                      <button onClick={() => cambiarEstatus(user.id)}>
+                        Estatus {user.id}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-6">
+            {editar ? <h2 className="font-semibold text-2xl mt-7"> Editar Operacion</h2> : <h2 className="font-semibold text-2xl mt-7">Registrar Operacion</h2>}
 
-                    Estatus {user.id}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <form onSubmit={editar ? actualizar : handleSubmit} className="my-5">
+              <div>
+                <label className="m-3">Empresa:</label>
+                <select
+                  name="empresa"
+                  id="empresa"
+                  value={formData.empresa}
+                  onChange={handleChange}
+                  className="border-4 border-teal-500/100"
+                >
+                  <option value=""> Selecciona una empresa </option>
+                  {empresas.map((empresa) => (
+                    <option value={empresa.id}>{empresa.nombre}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="m-3">Tipo de operacion:</label>
+                <select
+                  className="rounded border-2 border-teal-700/100 m-3"
+                  name="tipo"
+                  id="tipo"
+                  value={formData.tipo}
+                  onChange={handleChange}
+                >
+                  <option value="">--Please choose an option--</option>
+                  <option value="1">carga</option>
+                  <option value="0">descarga</option>
+                </select>
+              </div>
+              <div>
+                <label className="m-3">Producto:</label>
+                <select
+                  name="producto"
+                  id="producto"
+                  value={formData.producto}
+                  onChange={handleChange}
+                >
+                  <option> Selecciona un producto </option>
+                  {productos.map((producto) => (
+                    <option value={producto.id}>{producto.nombre}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="m-3">
+                  cantidad:
+                  <input
+                    className="rounded border-2 border-teal-700/100 m-3"
+                    type="number"
+                    name="cantidad"
+                    id="cantidad"
+                    value={formData.cantidad}
+                    onChange={handleChange}
+                  ></input>
+                </label>
+              </div>
+              <div>
+                <label htmlFor="fecha" className="m-3">Selecciona una fecha:</label>
+                <input
+                  type="date"
+                  id="fechaConclusionEstimada"
+                  name="fechaConclusionEstimada"
+                  value={formData.fechaConclusionEstimada}
+                  onChange={handleChange}
+                  className="border-2 border-teal-500/100 "
+                ></input>
+              </div>
+              <div className="mb-4">
+                <label className="m-3">
+                  descripcion:
+                  <input
+                    className=" rounded border-2 border-teal-700/100 mt-4 mx-4 p-5"
+                    type="text"
+                    id="descripcion"
+                    name="descripcion"
+                    value={formData.descripcion}
+                    onChange={handleChange}
+                  ></input>
+                </label>
+              </div>
+              <button type="submit" className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
+                {editar ? "actualizar".toLocaleUpperCase() : "registrar".toLocaleUpperCase()}
+              </button>
+            </form>
+          </div>
+        </>
       </div>
-      <br />
-      <br />
-      <br />
-      <p class="text-6xl color-red-800"> ola k ase</p>
-      <div>
-        {editar ? <h1> Editar Operacion</h1> : <h1>Registrar Operacion</h1>}
-
-        <form onSubmit={editar ? actualizar : handleSubmit}>
-          <div>
-            <label>Empresa:</label>
-            <select
-              name="empresa"
-              id="empresa"
-              value={formData.empresa}
-              onChange={handleChange}
-            >
-              <option value=""> Selecciona una empresa </option>
-              {empresas.map((empresa) => (
-                <option value={empresa.id}>{empresa.nombre}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label>Tipo de operacion:</label>
-            <select
-              name="tipo"
-              id="tipo"
-              value={formData.tipo}
-              onChange={handleChange}
-            >
-              <option value="">--Please choose an option--</option>
-              <option value="1">carga</option>
-              <option value="0">descarga</option>
-            </select>
-          </div>
-          <div>
-            <label>Producto:</label>
-            <select
-              name="producto"
-              id="producto"
-              value={formData.producto}
-              onChange={handleChange}
-            >
-              <option> Selecciona un producto </option>
-              {productos.map((producto) => (
-                <option value={producto.id}>{producto.nombre}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label>
-              cantidad:
-              <input
-                type="number"
-                name="cantidad"
-                id="cantidad"
-                value={formData.cantidad}
-                onChange={handleChange}
-              ></input>
-            </label>
-          </div>
-          <div>
-            <label for="fecha">Selecciona una fecha:</label>
-            <input
-              type="date"
-              id="fechaConclusionEstimada"
-              name="fechaConclusionEstimada"
-              value={formData.fechaConclusionEstimada}
-              onChange={handleChange}
-            ></input>
-          </div>
-          <div>
-            <label>
-              descripcion:
-              <input
-                type="text"
-                id="descripcion"
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-              ></input>
-            </label>
-          </div>
-          <button type="submit">{editar ? "actualizar" : "registrar"}</button>
-        </form>
-      </div>
-    </>
+    </div>
   );
 };
 

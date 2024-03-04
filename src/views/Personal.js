@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import SideBar from "./SideBar";
 
 const Personal = () => {
   const [users, setUsers] = useState([]);
@@ -131,159 +132,166 @@ const Personal = () => {
   };
 
   return (
-    <>
-      <button onClick={fetchUsers}> ver empleados</button>
-      <br />
-      <div className="App">
-        <h1>Lista de Usuarios</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>segundoNombre</th>
-              <th>apellido 1</th>
-              <th>apellido 2</th>
-              <th>estatus</th>
-              <th>rol</th>
-              <th>registro</th>
-              <th>Editar</th>
-              <th>Estatus</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.nombre}</td>
-                <td>{user.segundoNombre}</td>
-                <td>{user.apellidoP}</td>
-                <td>{user.apellidoM}</td>
-                <td>{user.estatus}</td>
-                <td>{user.rol}</td>
-                <td>{user.registro}</td>
-                <td>
-                  <button
-                    onClick={() => {
-                      editarCampos(user);
-                      setEditar(true);
-                    }}
-                  >
-                    {" "}
-                    Editar{" "}
-                  </button>
-                </td>
-                <td>
-                  <button onClick={() => cambiarEstatus(user.id)}>
-                    {" "}
-                    Estatus{" "}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div class="min-h-screen bg-gray-50/50">
+      <SideBar />
+      <div className=" p-4 xl:ml-80">
+        <>
+          <button onClick={fetchUsers}> ver empleados</button>
+          <br />
+          <div className="App">
+            <h1>Lista de Usuarios</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>segundoNombre</th>
+                  <th>apellido 1</th>
+                  <th>apellido 2</th>
+                  <th>estatus</th>
+                  <th>rol</th>
+                  <th>registro</th>
+                  <th>Editar</th>
+                  <th>Estatus</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.nombre}</td>
+                    <td>{user.segundoNombre}</td>
+                    <td>{user.apellidoP}</td>
+                    <td>{user.apellidoM}</td>
+                    <td>{user.estatus}</td>
+                    <td>{user.rol}</td>
+                    <td>{user.registro}</td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          editarCampos(user);
+                          setEditar(true);
+                        }}
+                      >
+                        {" "}
+                        Editar{" "}
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => cambiarEstatus(user.id)}>
+                        {" "}
+                        Estatus{" "}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <br />
+          <br />
+          <br />
+          <div>
+            {editar ? <h1> Editar empleado</h1> : <h1>Registrar empleado</h1>}
+            <form onSubmit={editar ? actualizar : handleSubmit}>
+              <div>
+                <label>Nombre:</label>
+                <input
+                  required
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label>segundo nombre:</label>
+                <input
+                  type="text"
+                  name="segundoNombre"
+                  value={formData.segundoNombre}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label>apellido paterno:</label>
+                <input
+                  type="text"
+                  name="apellidoP"
+                  value={formData.apellidoP}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label>apelldio materino:</label>
+                <input
+                  type="text"
+                  name="apellidoM"
+                  value={formData.apellidoM}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>email:</label>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>contraseña:</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <label>Rol:</label>
+                <label>
+                  <input
+                    required
+                    type="radio"
+                    name="rol"
+                    value="0"
+                    onChange={handleChange}
+                  />
+                  administrador
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="rol"
+                    value="1"
+                    onChange={handleChange}
+                  />
+                  Operador
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="rol"
+                    value="2"
+                    onChange={handleChange}
+                  />
+                  Almacenista
+                </label>
+                <br />
+              </div>
+              <button type="submit">
+                {editar ? "actualizar" : "registrar"}
+              </button>
+            </form>
+          </div>
+        </>
       </div>
-      <br />
-      <br />
-      <br />
-      <div>
-        {editar ? <h1> Editar empleado</h1> : <h1>Registrar empleado</h1>}
-        <form onSubmit={editar ? actualizar : handleSubmit}>
-          <div>
-            <label>Nombre:</label>
-            <input
-              required
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>segundo nombre:</label>
-            <input
-              type="text"
-              name="segundoNombre"
-              value={formData.segundoNombre}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>apellido paterno:</label>
-            <input
-              type="text"
-              name="apellidoP"
-              value={formData.apellidoP}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>apelldio materino:</label>
-            <input
-              type="text"
-              name="apellidoM"
-              value={formData.apellidoM}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>email:</label>
-            <input
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>contraseña:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Rol:</label>
-            <label>
-              <input
-                required
-                type="radio"
-                name="rol"
-                value="0"
-                onChange={handleChange}
-              />
-              administrador
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="rol"
-                value="1"
-                onChange={handleChange}
-              />
-              Operador
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="rol"
-                value="2"
-                onChange={handleChange}
-              />
-              Almacenista
-            </label>
-            <br />
-          </div>
-          <button type="submit">{editar ? "actualizar" : "registrar"}</button>
-        </form>
-      </div>
-    </>
+    </div>
   );
 };
 

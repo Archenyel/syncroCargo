@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import SideBar from "./SideBar";
 
 const Companies = () => {
   const [users, setUsers] = useState([]);
@@ -117,13 +118,14 @@ const Companies = () => {
   };
 
   return (
-    <>
-      <button onClick={fetchUsers}> ver empresas</button>
-      <br />
+    <div class="min-h-screen bg-gray-50/50">
+      <SideBar/>
+      <div className=" p-4 xl:ml-80">
       <div className="App">
-        <h1>Lista de Emprsas</h1>
-        <table>
-          <thead>
+        <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">Lista de Empresas</h1>
+        <button onClick={fetchUsers} className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"> ver empresas</button>
+        <table className="table-auto text-center">
+          <thead className="border-4 border-sky-700 ">
             <tr>
               <th>ID</th>
               <th>Nombre</th>
@@ -133,25 +135,26 @@ const Companies = () => {
               <th>Estatus</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="border-4 border-sky-700">
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.nombre}</td>
-                <td>{user.direccion}</td>
-                <td>{user.estatus}</td>
-                <td>
+                <td className="p-3">{user.id}</td>
+                <td className="p-3">{user.nombre}</td>
+                <td className="p-3">{user.direccion}</td>
+                <td className="p-3">{user.estatus}</td>
+                <td className="p-3">
                   <button
                     onClick={() => {
                       editarCampos(user);
                       setEditar(true);
                     }}
+                    className="bg-orange-500 p-2 rounded text-white hover:bg-orange-300"
                   >
                     {" "}
                     Editar{" "}
                   </button>
                 </td>
-                <td>
+                <td className="p-3">
                   <button onClick={() => cambiarEstatus(user.id)}>
                     {" "}
                     Estatus{" "}
@@ -162,15 +165,13 @@ const Companies = () => {
           </tbody>
         </table>
       </div>
-      <br />
-      <br />
-      <br />
       <div>
-        {editar ? <h1> Editar Empresa</h1> : <h1>Registrar Empresa</h1>}
-        <form onSubmit={editar ? actualizar : handleSubmit}>
+        {editar ? <h2 className="font-semibold text-2xl mt-7"> Editar Empresa</h2> : <h2 className="font-semibold text-2xl mt-7">Registrar Empresa</h2>}
+        <form onSubmit={editar ? actualizar : handleSubmit} className="my-5">
           <div>
             <label>Nombre:</label>
             <input
+              className="rounded border-2 border-teal-700/100 m-3"
               required
               type="text"
               name="nombre"
@@ -181,16 +182,19 @@ const Companies = () => {
           <div>
             <label>direccion:</label>
             <input
+              className="rounded border-2 border-teal-700/100 m-3"
               type="text"
               name="direccion"
               value={formData.direccion}
               onChange={handleChange}
             />
           </div>
-          <button type="submit">{editar ? "actualizar" : "registrar"}</button>
+          <button className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+           type="submit">{editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}</button>
         </form>
       </div>
-    </>
+      </div>
+    </div>
   );
 };
 
