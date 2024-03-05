@@ -7,8 +7,23 @@ const Operations = () => {
   const [empresas, setEmpresas] = useState([]);
   const [empleados, setEmpleados] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [cortinas, setCortinas] = useState([]);
   const [editar, setEditar] = useState(false);
   const [formData, setFormData] = useState({
+    id: "",
+    empresa: "",
+    tipo: "",
+    operador: "",
+    almacenista: "",
+    producto: "",
+    descripcion: "",
+    cantidad: "",
+    estatus: "",
+    fechaConclusionEstimada: "",
+    cortina: "",
+  });
+
+  const [formData2, setFormData2] = useState({
     id: "",
     empresa: "",
     tipo: "",
@@ -40,7 +55,7 @@ const Operations = () => {
 
   //setea los datos dentro de formData con los datos del usuario seleccionado en la tabla
   const editarCampos = (e) => {
-    setFormData(e);
+    setFormData2(e);
   };
 
   //funcion que va llenando los campos dentro del objeto formdata(si asi se llama el objeto) con los datos ingresados en el forms
@@ -55,6 +70,17 @@ const Operations = () => {
         "http://localhost/integradora/BACK/get_operaciones"
       );
       setData(response.data.operaciones);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getCortinas = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost/integradora/BACK/get_cortinas"
+      );
+      setCortinas(response.data.cortinas);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -125,17 +151,17 @@ const Operations = () => {
   };
 
   const actualizar = (e) => {
-    e.preventDefault();
+
 
     const data = new FormData();
-    data.append("id", formData.id);
+    data.append("id", formData2.id);
     data.append("empresa", formData.empresa);
     data.append("tipo", formData.tipo);
+    data.append("producto", formData.producto);
     data.append("operador", formData.operador);
     data.append("almacenista", formData.almacenista);
     data.append("descripcion", formData.descripcion);
     data.append("cantidad", formData.cantidad);
-    data.append("estatus", formData.estatus);
     data.append("fechaConclusionEstimada", formData.fechaConclusionEstimada);
     data.append("cortina", formData.cortina);
 
@@ -188,14 +214,26 @@ const Operations = () => {
     getProductos();
   }, []);
 
+  useEffect(() => {
+    getCortinas();
+  }, []);
+
   return (
     <div class="min-h-screen bg-gray-50/50">
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
           <div className="App">
-            <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">Lista de Operaciones</h1>
-          <button onClick={fetchUsers} className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"> ver operaciones</button>
+            <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">
+              Lista de Operaciones
+            </h1>
+            <button
+              onClick={fetchUsers}
+              className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
+            >
+              {" "}
+              ver operaciones
+            </button>
             <table className="table-auto text-center">
               <thead className="border-4 border-sky-700 ">
                 <tr>
@@ -252,10 +290,197 @@ const Operations = () => {
               </tbody>
             </table>
           </div>
+          <br />
+          {editar ? (
+            <>
+              <table className="table-auto text-center border-4 border-sky-700">
+                <tr>
+                  <th> Datos </th>
+                  <th>Valores actuales:</th>
+                  <th>Valores nuevos</th>
+                </tr>
+                <tr>
+                  <th>ID:</th>
+                  <td>{formData2.id}</td>
+                  <td>NA</td>
+                </tr>
+                <tr>
+                  <th>Empresa:</th>
+                  <td>{formData2.empresa}</td>
+                  <td>
+                    <select
+                      name="empresa"
+                      id="empresa"
+                      value={formData.empresa}
+                      onChange={handleChange}
+                      className="rounded border-2 border-teal-700/100 m-3"
+                    >
+                      <option value=""> Selecciona una empresa </option>
+                      {empresas.map((empresa) => (
+                        <option value={empresa.id}>{empresa.nombre}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Tipo de operacion:</th>
+                  <td>{formData2.tipo}</td>
+                  <td>
+                    <select
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      name="tipo"
+                      id="tipo"
+                      value={formData.tipo}
+                      onChange={handleChange}
+                    >
+                      <option value="">--Please choose an option--</option>
+                      <option value="1">carga</option>
+                      <option value="0">descarga</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Operador:</th>
+                  <td>{formData2.operador}</td>
+                  <td>
+                    <select
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      name="operador"
+                      id="operador"
+                      value={formData.operador}
+                      onChange={handleChange}
+                    >
+                      <option> Operador </option>
+                      {empleados.map((empleados) => (
+                        <option value={empleados.id}>{empleados.nombre}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Almacenista:</th>
+                  <td>{formData2.almacenista}</td>
+                  <td>
+                    <select
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      name="almacenista"
+                      id="almacenista"
+                      value={formData.almacenista}
+                      onChange={handleChange}
+                    >
+                      <option> almacenista </option>
+                      {empleados.map((empleados) => (
+                        <option value={empleados.id}>{empleados.nombre}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Producto:</th>
+                  <td>{formData2.producto}</td>
+                  <td>
+                    <select
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      name="producto"
+                      id="producto"
+                      value={formData.producto}
+                      onChange={handleChange}
+                    >
+                      <option> producto </option>
+                      {productos.map((producto) => (
+                        <option value={producto.id}>{producto.nombre}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Descripcion:</th>
+                  <td>{formData2.descripcionOperacion}</td>
+                  <td>
+                    <input
+                      className=" rounded border-2 border-teal-700/100 mt-4 mx-4 p-5"
+                      type="text"
+                      id="descripcion"
+                      name="descripcion"
+                      value={formData.descripcion}
+                      onChange={handleChange}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Cantidad:</th>
+                  <td>{formData2.cantidad}</td>
+                  <td>
+                    <input
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      type="number"
+                      name="cantidad"
+                      id="cantidad"
+                      value={formData.cantidad}
+                      onChange={handleChange}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Fecha estimada:</th>
+                  <td>{formData2.fechaConclusionEstimada}</td>
+                  <td>
+                    <input
+                      type="date"
+                      id="fechaConclusionEstimada"
+                      name="fechaConclusionEstimada"
+                      value={formData.fechaConclusionEstimada}
+                      onChange={handleChange}
+                      className="border-2 border-teal-500/100 "
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Cortina:</th>
+                  <td>{formData2.cortina}</td>
+                  <td>
+                    <select
+                      className="rounded border-2 border-teal-700/100 m-3"
+                      name="cortina"
+                      id="cortina"
+                      value={formData.cortina}
+                      onChange={handleChange}
+                    >
+                      <option> cortina </option>
+                      {cortinas.map((cortina) => (
+                        <option value={cortina.id}>{cortina.numero}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>acciones</th>
+                  <td>
+                    <button onClick={ () => {setEditar(false); limpiar()}} className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
+                      {"cancelar".toLocaleUpperCase()}
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={ () => actualizar()}  className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
+                      {"actualizar".toLocaleUpperCase()}
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </>
+          ) : (
+            <></>
+          )}
           <div className="mt-6">
-            {editar ? <h2 className="font-semibold text-2xl mt-7"> Editar Operacion</h2> : <h2 className="font-semibold text-2xl mt-7">Registrar Operacion</h2>}
+            {editar ? (
+              <h2 className="font-semibold text-2xl mt-7"> Editar Operacion</h2>
+            ) : (
+              <h2 className="font-semibold text-2xl mt-7">
+                Registrar Operacion
+              </h2>
+            )}
 
-            <form onSubmit={editar ? actualizar : handleSubmit} className="my-5">
+            <form onSubmit={handleSubmit} className="my-5">
               <div>
                 <label className="m-3">Empresa:</label>
                 <select
@@ -313,7 +538,9 @@ const Operations = () => {
                 </label>
               </div>
               <div>
-                <label htmlFor="fecha" className="m-3">Selecciona una fecha:</label>
+                <label htmlFor="fecha" className="m-3">
+                  Selecciona una fecha:
+                </label>
                 <input
                   type="date"
                   id="fechaConclusionEstimada"
@@ -336,8 +563,11 @@ const Operations = () => {
                   ></input>
                 </label>
               </div>
-              <button type="submit" className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
-                {editar ? "actualizar".toLocaleUpperCase() : "registrar".toLocaleUpperCase()}
+              <button
+                type="submit"
+                className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+              >
+                {"registrar".toLocaleUpperCase()}
               </button>
             </form>
           </div>
