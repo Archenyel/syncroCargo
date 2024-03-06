@@ -3,9 +3,13 @@ import axios from "axios";
 import SideBar from "./SideBar";
 
 const Operations = () => {
+  const [inputValue, setInputValue] = useState("");
+
   const [data, setData] = useState([]);
   const [empresas, setEmpresas] = useState([]);
   const [empleados, setEmpleados] = useState([]);
+  const [operadores, setOperadores] = useState([]);
+  const [almacenistas, setAlmacenistas] = useState([]);
   const [productos, setProductos] = useState([]);
   const [cortinas, setCortinas] = useState([]);
   const [editar, setEditar] = useState(false);
@@ -97,6 +101,28 @@ const Operations = () => {
     }
   };
 
+  const getOperadores = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost/integradora/BACK/get_operadores"
+      );
+      setOperadores(response.data.personal);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAlmacenistas = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost/integradora/BACK/get_almacenistas"
+      );
+      setAlmacenistas(response.data.personal);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const getProductos = async () => {
     try {
       const response = await axios.get(
@@ -117,6 +143,29 @@ const Operations = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const cambioEstatus = (id, estatus) => {
+    const data = new FormData();
+
+    data.append("id", id);
+    data.append("estatus", estatus);
+
+    const url = "http://localhost/integradora/BACK/operacionEstatus";
+
+    axios
+      .post(url, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        limpiar();
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   //funcion que ingresa los datos del forms a un objeto de la clase formdata, esto por que el codeginiter feo no soporta JSON asi que tenemos que enviarlo como formdata
@@ -151,8 +200,6 @@ const Operations = () => {
   };
 
   const actualizar = (e) => {
-
-
     const data = new FormData();
     data.append("id", formData2.id);
     data.append("empresa", formData.empresa);
@@ -182,11 +229,14 @@ const Operations = () => {
       });
   };
 
-  const cambiarEstatus = (e) => {
+  const cambiarEstatus = (id, estatus) => {
     const data = new FormData();
-    data.append("id", e);
+    data.append("id", id);
+    data.append("estatus", estatus);
 
-    const url = "http://localhost/integradora/BACK/baja_operacion";
+    console.log(data);
+
+    const url = "http://localhost/integradora/BACK/operacionEstatus";
 
     axios
       .post(url, data, {
@@ -202,20 +252,38 @@ const Operations = () => {
       });
   };
 
+  function estatus(estatus) {
+    switch (estatus) {
+      case "1":
+        return "asignada";
+      case "2":
+        return "en ruta";
+      case "3":
+        return "en cortina";
+      case "4":
+        return "en carga";
+      case "5":
+        return "salida";
+      case "6":
+        return "en entrega";
+      case "7":
+        return "entragada";
+      case "8":
+        return "finalizada";
+      case "0":
+        return "Inactiva";
+      default:
+        return "Otro contenido para otros estatus";
+    }
+  }
+
   useEffect(() => {
     getPersonal();
-  }, []);
-
-  useEffect(() => {
+    getOperadores();
     getEmpresas();
-  }, []);
-
-  useEffect(() => {
     getProductos();
-  }, []);
-
-  useEffect(() => {
     getCortinas();
+    getAlmacenistas();
   }, []);
 
   return (
@@ -224,6 +292,69 @@ const Operations = () => {
       <div className=" p-4 xl:ml-80">
         <>
           <div className="App">
+            <div>
+              <div>
+                <label htmlFor="inputField">Id de prueba:</label>
+                <input
+                  type="text"
+                  id="inputField"
+                  value={inputValue}
+                  onChange={(event) => setInputValue(event.target.value)}
+                />
+                <div>Valor actual: {inputValue}</div>
+              </div>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 1)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                operacion asignada
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 2)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                operador en ruta
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 3)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                operador llega en cortina
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 4)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                operador en carga
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 5)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                operacion salida
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 6)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                {" "}
+                almacenista en entrega
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 7)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                {" "}
+                operador entragada
+              </button>
+              <button
+                onClick={() => cambiarEstatus(inputValue, 8)}
+                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
+              >
+                {" "}
+                operador finalizada
+              </button>
+            </div>
             <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">
               Lista de Operaciones
             </h1>
@@ -232,7 +363,14 @@ const Operations = () => {
               className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
             >
               {" "}
-              ver operaciones
+              ver operaciones activas
+            </button>
+            <button
+              onClick={fetchUsers}
+              className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
+            >
+              {" "}
+              ver operaciones concluidas
             </button>
             <table className="table-auto text-center">
               <thead className="border-4 border-sky-700 ">
@@ -249,7 +387,7 @@ const Operations = () => {
                   <th>cortina</th>
                   <th>Estatus</th>
                   <th>Editar</th>
-                  <th>Estatus</th>
+                  <th>Baja</th>
                 </tr>
               </thead>
               <tbody className="border-4 border-sky-700">
@@ -257,7 +395,9 @@ const Operations = () => {
                   <tr key={user.id} className="border-3 border-sky-500">
                     <td className="p-3 ">{user.id}</td>
                     <td className="p-3 ">{user.empresa}</td>
-                    <td className="p-3 ">{user.tipo}</td>
+                    <td className="p-3 ">
+                      {user.tipo === "1" ? "carga" : "descarga"}
+                    </td>
                     <td className="p-3 ">{user.operador}</td>
                     <td className="p-3 ">{user.almacenista}</td>
                     <td className="p-3 ">{user.producto}</td>
@@ -267,7 +407,7 @@ const Operations = () => {
                     <td className="p-3 ">
                       {user.cortina === 99 ? user.cortina : "sin asignar "}
                     </td>
-                    <td className="p-3 ">{user.estatus}</td>
+                    <td className="p-3 ">{estatus(user.estatus)}</td>
                     <td className="p-3 ">
                       <button
                         className="bg-orange-500 p-2 rounded text-white hover:bg-orange-300"
@@ -281,8 +421,11 @@ const Operations = () => {
                       </button>
                     </td>
                     <td className="p-3 ">
-                      <button onClick={() => cambiarEstatus(user.id)}>
-                        Estatus {user.id}
+                      <button
+                        className="bg-red-500 p-0 rounded text-white hover:bg-orange-300"
+                        onClick={() => cambiarEstatus(user.id)}
+                      >
+                        Dar de baja
                       </button>
                     </td>
                   </tr>
@@ -351,7 +494,7 @@ const Operations = () => {
                       onChange={handleChange}
                     >
                       <option> Operador </option>
-                      {empleados.map((empleados) => (
+                      {operadores.map((empleados) => (
                         <option value={empleados.id}>{empleados.nombre}</option>
                       ))}
                     </select>
@@ -369,7 +512,7 @@ const Operations = () => {
                       onChange={handleChange}
                     >
                       <option> almacenista </option>
-                      {empleados.map((empleados) => (
+                      {almacenistas.map((empleados) => (
                         <option value={empleados.id}>{empleados.nombre}</option>
                       ))}
                     </select>
@@ -456,12 +599,21 @@ const Operations = () => {
                 <tr>
                   <th>acciones</th>
                   <td>
-                    <button onClick={ () => {setEditar(false); limpiar()}} className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
+                    <button
+                      onClick={() => {
+                        setEditar(false);
+                        limpiar();
+                      }}
+                      className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                    >
                       {"cancelar".toLocaleUpperCase()}
                     </button>
                   </td>
                   <td>
-                    <button onClick={ () => actualizar()}  className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold">
+                    <button
+                      onClick={() => actualizar()}
+                      className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                    >
                       {"actualizar".toLocaleUpperCase()}
                     </button>
                   </td>
@@ -535,6 +687,23 @@ const Operations = () => {
                     value={formData.cantidad}
                     onChange={handleChange}
                   ></input>
+                </label>
+              </div>
+              <div>
+                <label className="m-3">
+                  Operador
+                  <select
+                    className="rounded border-2 border-teal-700/100 m-3"
+                    name="operador"
+                    id="operador"
+                    value={formData.operador}
+                    onChange={handleChange}
+                  >
+                    <option> Operador </option>
+                    {operadores.map((empleados) => (
+                      <option value={empleados.id}>{empleados.nombre} </option>
+                    ))}
+                  </select>
                 </label>
               </div>
               <div>

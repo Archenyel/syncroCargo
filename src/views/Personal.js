@@ -259,7 +259,7 @@ const Personal = () => {
                     required
                     type="radio"
                     name="rol"
-                    value="0"
+                    value="1"
                     onChange={handleChange}
                   />
                   administrador
@@ -268,7 +268,7 @@ const Personal = () => {
                   <input
                     type="radio"
                     name="rol"
-                    value="1"
+                    value="2"
                     onChange={handleChange}
                   />
                   Operador
@@ -277,7 +277,7 @@ const Personal = () => {
                   <input
                     type="radio"
                     name="rol"
-                    value="2"
+                    value="3"
                     onChange={handleChange}
                   />
                   Almacenista
