@@ -136,10 +136,16 @@ const Personal = () => {
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
-          <button onClick={fetchUsers}> ver empleados</button>
+          <button
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            onClick={fetchUsers}
+          >
+            {" "}
+            ver empleados
+          </button>
           <br />
           <div className="App">
-            <h1>Lista de Usuarios</h1>
+            <h1 className="font-semibold text-2xl mt-7">Lista de Usuarios</h1>
             <table>
               <thead>
                 <tr>
@@ -168,6 +174,7 @@ const Personal = () => {
                     <td>{user.registro}</td>
                     <td>
                       <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
                           editarCampos(user);
                           setEditar(true);
@@ -178,7 +185,10 @@ const Personal = () => {
                       </button>
                     </td>
                     <td>
-                      <button onClick={() => cambiarEstatus(user.id)}>
+                      <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        onClick={() => cambiarEstatus(user.id)}
+                      >
                         {" "}
                         Estatus{" "}
                       </button>
@@ -192,11 +202,12 @@ const Personal = () => {
           <br />
           <br />
           <div>
-            {editar ? <h1> Editar empleado</h1> : <h1>Registrar empleado</h1>}
+            {editar ? <h1 className="font-semibold text-2xl mt-7"> Editar empleado</h1> : <h1 className="font-semibold text-2xl mt-7">Registrar empleado</h1>}
             <form onSubmit={editar ? actualizar : handleSubmit}>
               <div>
                 <label>Nombre:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   required
                   type="text"
                   name="nombre"
@@ -207,6 +218,7 @@ const Personal = () => {
               <div>
                 <label>segundo nombre:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="text"
                   name="segundoNombre"
                   value={formData.segundoNombre}
@@ -216,6 +228,7 @@ const Personal = () => {
               <div>
                 <label>apellido paterno:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="text"
                   name="apellidoP"
                   value={formData.apellidoP}
@@ -225,6 +238,7 @@ const Personal = () => {
               <div>
                 <label>apelldio materino:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="text"
                   name="apellidoM"
                   value={formData.apellidoM}
@@ -235,6 +249,7 @@ const Personal = () => {
               <div>
                 <label>email:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="text"
                   name="email"
                   value={formData.email}
@@ -245,6 +260,7 @@ const Personal = () => {
               <div>
                 <label>contraseña:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="password"
                   name="password"
                   value={formData.password}
@@ -284,7 +300,10 @@ const Personal = () => {
                 </label>
                 <br />
               </div>
-              <button type="submit">
+              <button
+                className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                type="submit"
+              >
                 {editar ? "actualizar" : "registrar"}
               </button>
             </form>

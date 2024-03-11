@@ -123,10 +123,16 @@ const Products = () => {
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
-          <button onClick={fetchUsers}> ver productos</button>
+          <button
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            onClick={fetchUsers}
+          >
+            {" "}
+            ver productos
+          </button>
           <br />
           <div className="App">
-            <h1>Lista de Productos</h1>
+            <h1 className="font-semibold text-2xl mt-7">Lista de Productos</h1>
             <table>
               <thead>
                 <tr>
@@ -147,6 +153,7 @@ const Products = () => {
                     <td>{user.stock}</td>
                     <td>
                       <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
                           editarCampos(user);
                           setEditar(true);
@@ -157,7 +164,10 @@ const Products = () => {
                       </button>
                     </td>
                     <td>
-                      <button onClick={() => cambiarEstatus(user.id)}>
+                      <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        onClick={() => cambiarEstatus(user.id)}
+                      >
                         {" "}
                         Estatus{" "}
                       </button>
@@ -171,11 +181,12 @@ const Products = () => {
           <br />
           <br />
           <div>
-            {editar ? <h1> Editar Productos</h1> : <h1>Registrar Productos</h1>}
+            {editar ? <h1 className="font-semibold text-2xl mt-7"> Editar Productos</h1> : <h1 className="font-semibold text-2xl mt-7">Registrar Productos</h1>}
             <form onSubmit={editar ? actualizar : handleSubmit}>
               <div>
                 <label>Nombre:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   required
                   type="text"
                   name="nombre"
@@ -186,13 +197,17 @@ const Products = () => {
               <div>
                 <label>stock:</label>
                 <input
+                  className="rounded border-2 border-teal-700/100 m-2"
                   type="number"
                   name="stock"
                   value={formData.stock}
                   onChange={handleChange}
                 />
               </div>
-              <button type="submit">
+              <button
+                className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                type="submit"
+              >
                 {editar ? "actualizar" : "registrar"}
               </button>
             </form>

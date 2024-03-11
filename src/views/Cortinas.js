@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import SideBar from './SideBar';
+import SideBar from "./SideBar";
 
 const Cortinas = () => {
   const [users, setUsers] = useState([]);
@@ -113,74 +113,89 @@ const Cortinas = () => {
 
   return (
     <div class="min-h-screen bg-gray-50/50">
-      <SideBar/>
+      <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
-        <button onClick={fetchUsers}> ver cortinas</button>
-        <br />
-        <div className="App">
-          <h1>Lista de Cortinas</h1>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Numero</th>
-                <th>Estatus</th>
-                <th>Editar</th>
-                <th>Estatus</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.numero}</td>
-                  <td>{user.estatus}</td>
-                  <td>
-                    <button
-                      onClick={() => {
-                        editarCampos(user);
-                        setEditar(true);
-                      }}
-                    >
-                      {" "}
-                      Editar{" "}
-                    </button>
-                  </td>
-                  <td>
-                    <button onClick={() => cambiarEstatus(user.id)}>
-                      {" "}
-                      Estatus{" "}
-                    </button>
-                  </td>
+          <button
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            onClick={fetchUsers}
+          >
+            {" "}
+            ver cortinas
+          </button>
+          <br />
+          <div className="App">
+            <h1 className="font-semibold text-2xl mt-7">Lista de Cortinas</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Numero</th>
+                  <th>Estatus</th>
+                  <th>Editar</th>
+                  <th>Estatus</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <br />
-        <br />
-        <br />
-        <div>
-          {editar ? <h1> Editar Cortina</h1> : <h1>Registrar cortina</h1>}
-          <form onSubmit={editar ? actualizar : handleSubmit}>
-            <div>
-              <label>Numero:</label>
-              <input
-                required
-                type="number"
-                name="numero"
-                value={formData.numero}
-                onChange={handleChange}
-              />
-            </div>
-            <button type="submit">{editar ? "actualizar" : "registrar"}</button>
-          </form>
-        </div>
-      </>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.numero}</td>
+                    <td>{user.estatus}</td>
+                    <td>
+                      <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        onClick={() => {
+                          editarCampos(user);
+                          setEditar(true);
+                        }}
+                      >
+                        {" "}
+                        Editar{" "}
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        onClick={() => cambiarEstatus(user.id)}
+                      >
+                        {" "}
+                        Estatus{" "}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <br />
+          <br />
+          <br />
+          <div>
+            {editar ? <h1 className="font-semibold text-2xl mt-7"> Editar Cortina</h1> : <h1 className="font-semibold text-2xl mt-7">Registrar cortina</h1>}
+            <form onSubmit={editar ? actualizar : handleSubmit}>
+              <div>
+                <label>Numero:</label>
+                <input
+                  className="rounded border-2 border-teal-700/100 m-2"
+                  required
+                  type="number"
+                  name="numero"
+                  value={formData.numero}
+                  onChange={handleChange}
+                />
+              </div>
+              <button
+                className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                type="submit"
+              >
+                {editar ? "actualizar" : "registrar"}
+              </button>
+            </form>
+          </div>
+        </>
       </div>
     </div>
-    
   );
 };
 
