@@ -148,14 +148,15 @@ const Companies = () => {
                       editarCampos(user);
                       setEditar(true);
                     }}
-                    className="bg-orange-500 p-2 rounded text-white hover:bg-orange-300"
+                    className="bg-green-700 p-2 rounded text-white hover:bg-green-400"
                   >
                     {" "}
                     Editar{" "}
                   </button>
                 </td>
                 <td className="p-3">
-                  <button onClick={() => cambiarEstatus(user.id)}>
+                  <button onClick={() => cambiarEstatus(user.id)}
+                    className="bg-orange-500 p-2 rounded text-white hover:bg-orange-400">
                     {" "}
                     Estatus{" "}
                   </button>

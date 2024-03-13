@@ -132,22 +132,21 @@ const Personal = () => {
   };
 
   return (
-    <div class="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50">
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
+          <div className="App">
+            <h1 className="font-semibold text-2xl mt-7">Lista de Usuarios</h1>
           <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 my-4 font-semibold"
             onClick={fetchUsers}
           >
             {" "}
             ver empleados
           </button>
-          <br />
-          <div className="App">
-            <h1 className="font-semibold text-2xl mt-7">Lista de Usuarios</h1>
-            <table>
-              <thead>
+            <table className="table-auto text-center">
+              <thead className="border-4 border-sky-700 mx-3 px-3">
                 <tr>
                   <th>ID</th>
                   <th>Nombre</th>
@@ -161,18 +160,18 @@ const Personal = () => {
                   <th>Estatus</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="border-4 border-sky-700">
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.nombre}</td>
-                    <td>{user.segundoNombre}</td>
-                    <td>{user.apellidoP}</td>
-                    <td>{user.apellidoM}</td>
-                    <td>{user.estatus}</td>
-                    <td>{user.rol}</td>
-                    <td>{user.registro}</td>
-                    <td>
+                  <tr key={user.id} className="border-3 border-sky-500">
+                    <td className="p-3">{user.id}</td>
+                    <td className="p-3">{user.nombre}</td>
+                    <td className="p-3">{user.segundoNombre}</td>
+                    <td className="p-3">{user.apellidoP}</td>
+                    <td className="p-3">{user.apellidoM}</td>
+                    <td className="p-4">{user.estatus}</td>
+                    <td className="p-4">{user.rol}</td>
+                    <td className="p-3">{user.registro}</td>
+                    <td className="p-3">
                       <button
                         className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
@@ -184,9 +183,9 @@ const Personal = () => {
                         Editar{" "}
                       </button>
                     </td>
-                    <td>
+                    <td className="p-3">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
                         {" "}
@@ -268,9 +267,9 @@ const Personal = () => {
                   required
                 />
               </div>
-              <div>
+              <div className='mx-3 mb-3'>
                 <label>Rol:</label>
-                <label>
+                <label className='p-3'>
                   <input
                     required
                     type="radio"
@@ -280,7 +279,7 @@ const Personal = () => {
                   />
                   administrador
                 </label>
-                <label>
+                <label className='p-3'>
                   <input
                     type="radio"
                     name="rol"
@@ -289,7 +288,7 @@ const Personal = () => {
                   />
                   Operador
                 </label>
-                <label>
+                <label className='p-3'>
                   <input
                     type="radio"
                     name="rol"
@@ -298,13 +297,12 @@ const Personal = () => {
                   />
                   Almacenista
                 </label>
-                <br />
               </div>
               <button
                 className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                 type="submit"
               >
-                {editar ? "actualizar" : "registrar"}
+                {editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}
               </button>
             </form>
           </div>
