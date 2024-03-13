@@ -422,7 +422,7 @@ const Operations = () => {
                     </td>
                     <td className="p-3 ">
                       <button
-                        className="bg-red-500 p-0 rounded text-white hover:bg-orange-300"
+                        className="bg-red-500 p-2 rounded text-white hover:bg-orange-300"
                         onClick={() => cambiarEstatus(user.id)}
                       >
                         Dar de baja

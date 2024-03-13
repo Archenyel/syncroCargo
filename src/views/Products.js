@@ -119,22 +119,22 @@ const Products = () => {
   };
 
   return (
-    <div class="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50">
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
+          <br />
+          <div className="App">
+            <h1 className="font-semibold text-2xl mt-7">Lista de Productos</h1>
           <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold my-4"
             onClick={fetchUsers}
           >
             {" "}
             ver productos
           </button>
-          <br />
-          <div className="App">
-            <h1 className="font-semibold text-2xl mt-7">Lista de Productos</h1>
-            <table>
-              <thead>
+            <table className="table-auto text-center">
+              <thead className="border-4 border-sky-700 ">
                 <tr>
                   <th>ID</th>
                   <th>Nombre</th>
@@ -144,14 +144,14 @@ const Products = () => {
                   <th>Estatus</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="border-4 border-sky-700">
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.nombre}</td>
-                    <td>{user.estatus}</td>
-                    <td>{user.stock}</td>
-                    <td>
+                  <tr key={user.id} className="border-3 border-sky-500">
+                    <td className="p-3">{user.id}</td>
+                    <td className="p-3">{user.nombre}</td>
+                    <td className="p-3">{user.estatus}</td>
+                    <td className="p-3">{user.stock}</td>
+                    <td className="p-3">
                       <button
                         className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
@@ -163,9 +163,9 @@ const Products = () => {
                         Editar{" "}
                       </button>
                     </td>
-                    <td>
+                    <td className="p-3">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
                         {" "}
@@ -208,7 +208,7 @@ const Products = () => {
                 className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                 type="submit"
               >
-                {editar ? "actualizar" : "registrar"}
+                {editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}
               </button>
             </form>
           </div>

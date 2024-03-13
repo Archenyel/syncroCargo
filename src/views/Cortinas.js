@@ -116,18 +116,17 @@ const Cortinas = () => {
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
+          <div className="App">
+            <h1 className="font-semibold text-2xl mt-7">Lista de Cortinas</h1>
           <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold my-4"
             onClick={fetchUsers}
           >
             {" "}
             ver cortinas
           </button>
-          <br />
-          <div className="App">
-            <h1 className="font-semibold text-2xl mt-7">Lista de Cortinas</h1>
-            <table>
-              <thead>
+            <table className="table-auto text-center">
+              <thead className="border-4 border-sky-700 ">
                 <tr>
                   <th>ID</th>
                   <th>Numero</th>
@@ -136,13 +135,13 @@ const Cortinas = () => {
                   <th>Estatus</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="border-4 border-sky-700">
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.numero}</td>
-                    <td>{user.estatus}</td>
-                    <td>
+                  <tr key={user.id} className="border-3 border-sky-500">
+                    <td className="p-3">{user.id}</td>
+                    <td className="p-3">{user.numero}</td>
+                    <td className="p-3">{user.estatus}</td>
+                    <td className="p-3">
                       <button
                         className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
@@ -154,9 +153,9 @@ const Cortinas = () => {
                         Editar{" "}
                       </button>
                     </td>
-                    <td>
+                    <td className="p-3">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
                         {" "}
@@ -189,7 +188,7 @@ const Cortinas = () => {
                 className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                 type="submit"
               >
-                {editar ? "actualizar" : "registrar"}
+                {editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}
               </button>
             </form>
           </div>
