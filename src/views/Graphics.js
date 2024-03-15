@@ -64,6 +64,7 @@ const Graphics = () => {
     },
     series: [
       {
+        name: 'Uso medido',
         data: categorias,
       },
     ],

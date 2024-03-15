@@ -1,20 +1,69 @@
-import React from "react";
+import React,{useState} from "react";
+import { useNavigate } from "react-router-dom";
 import '../index.css';
-import { Link } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {validateEmail} from '../utils/ValidationMail';
+import IP from '../components/IP';
+
 
 function Login() {
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [loggedIn, setLoggedIn] = useState(false);
+  const navigation = useNavigate();
+  //Declaracion de objeto formulario
+  const [formValues, setFormValues] = useState(initializeForm());
 
-  // const handleUsernameChange = (event) => {
-  //   setUsername(event.target.value);
-  // };
+  //Manejo de cambios en el input
+  const handleChange = (input, event ) => {
+    //traer el form y setear el dato segun el campo
+    setFormValues({...formValues, [input]: event.target.value})
+  }
 
-  // const handlePasswordChange = (event) => {
-  //   setPassword(event.target.value);
-  // };
-
+  const handleSubmit = async()=> { 
+    if(formValues.email === '' || formValues.password === ''){
+      //Campos Vacios
+      return toast.error('Todos los campos son obligatorios', {
+        theme: 'dark'
+      });
+    }
+    if(!validateEmail(formValues.email)){
+      //email no valido
+      return toast.error('Email invalido', {
+        theme:'dark'
+      });
+    }
+    //Realizar solicitud a la API
+    try{
+      const response = await fetch(`${IP.IPUrl}/login`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: formValues.email,
+          password: formValues.password
+        })
+      })
+      if(response.ok){
+        const data = await response.json();
+        if(data.puesto === '1'){
+            sessionStorage.setItem('user',JSON.stringify(data))
+            navigation('/Operations');
+        }else{
+          sessionStorage.setItem('user',null);
+          toast.error('Credenciales invalidas')
+          setFormValues(initializeForm);
+        }
+      }else{
+        throw response.status
+      }
+    }catch(err){
+      setFormValues(initializeForm);
+      return toast.error('Credenciales Invalidas',{
+        theme: "dark"
+      });
+    }
+  }
+  
   // const handleSubmit = (event) => {
   //   event.preventDefault();
   //   // Aquí puedes agregar la lógica de autenticación
@@ -38,28 +87,36 @@ function Login() {
           <form action="#" method="POST">
             {/* <!-- Username Input --> */}
             <div className="mb-4">
-              <label htmlFor="username" className="block text-white">Username/Email</label>
-              <input type="text" id="username" name="username" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off"/>
+              <label htmlFor="username" className="block text-white">Email</label>
+              <input value={formValues.email} onChange={e => handleChange('email', e)} type="text" id="username" name="username" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off"/>
             </div>
             {/* <!-- Password Input --> */}
             <div className="mb-4">
               <label htmlFor="password" className="block text-white">Password</label>
-              <input type="password" id="password" name="password" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off"/>
+              <input value={formValues.password} onChange={e => handleChange('password', e)} type="password" id="password" name="password" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autoComplete="off"/>
             </div>
             {/* <!-- Forgot Password Link --> */}
             <div className="mb-6 text-blue-500">
-              <Link to='Operations' className="hover:underline">Forgot Password?</Link>
+              <a href="mailto:syncro_cargo@gmail.com" className="hover:underline text-blue-300">Forgot Password?</a>
             </div>
-            {/* <!-- Login Button --> */}
-            <Link to={'/Operations'} className="bg-gray-500 hover:bg-blue-600 text-white p-8 font-semibold rounded-md py-2 px-5">ACCEDER</Link>
           </form>
+            {/* <!-- Login Button --> */}
+            <button onClick={()=>handleSubmit()} className="bg-gray-500 hover:bg-blue-600 text-white p-8 font-semibold rounded-md py-2 px-5">ACCEDER</button>
           {/* <!-- Sign up  Link --> */}
           <div className="mt-6 text-blue-500 text-center">
-            <p className="text-white">Aun no tienes cuenta? <Link to='Operations' className="hover:underline text-blue-500">Solicitala</Link></p>
+            <p className="text-white">Aun no tienes cuenta? <a href="mailto:syncro_cargo@gmail.com" className="hover:underline text-blue-500">Solicitala</a></p>
           </div>
         </div>
+        <ToastContainer/>
       </div>        
     );
+  }
+
+  function initializeForm(){
+    return {
+      email: '',
+      password: ''
+    }
   }
 
 export default Login;

@@ -112,7 +112,7 @@ const Cortinas = () => {
   };
 
   return (
-    <div class="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50">
       <SideBar />
       <div className=" p-4 xl:ml-80">
         <>

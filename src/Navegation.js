@@ -23,7 +23,7 @@ const Navegation = () => {
           <Route path="Graphics" Component={Graphics } /> 
           <Route path="Cortinas" Component={Cortinas } /> 
           <Route path="Products" Component={Products } /> 
-          <Route path="Companies" Component={Companies } />
+          <Route path="Companies" Component={Companies }/>
       </Routes>
   )
 }

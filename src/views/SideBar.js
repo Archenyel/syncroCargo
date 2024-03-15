@@ -1,7 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export default function SideBar() {
+  const navigation = useNavigate();
+  useEffect(()=>{
+    //Chequeo de usuario correspondiente por si descubren alguna ruta y quieren explotarla
+    const userStored = JSON.parse(sessionStorage.getItem('user'))
+    if(userStored === null || userStored === undefined){
+      navigation('/Login');
+    }
+    console.log(userStored);
+  },[navigation])
+  //ERROR SI DA FLECHA ATRAS REINICIAR NAVEGACION AL HACER LOGOUT
+  const handleLogout = ()=> {
+    sessionStorage.removeItem('user');
+    navigation('/Login');
+  }
+  
+
   return (
       <aside className="bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
         <div className="m-4">
@@ -179,7 +196,7 @@ export default function SideBar() {
               </p>
             </li>
             <li>
-              <Link className="" to="/Login"> {/**Hacer un LOGOUT */}
+              <button onClick={handleLogout}> {/**Hacer un LOGOUT */}
                 <button
                   className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg  text-white 
                   hover:bg-gradient-to-tr hover:from-red-600 to-red-400
@@ -203,7 +220,7 @@ export default function SideBar() {
                     Salir
                   </p>
                 </button>
-              </Link>
+              </button>
             </li>
           </ul>
         </div>
