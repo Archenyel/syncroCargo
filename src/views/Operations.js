@@ -292,69 +292,7 @@ const Operations = () => {
       <div className=" p-4 xl:ml-80">
         <>
           <div className="App">
-            <div>
-              <div>
-                <label htmlFor="inputField">Id de prueba:</label>
-                <input
-                  type="text"
-                  id="inputField"
-                  value={inputValue}
-                  onChange={(event) => setInputValue(event.target.value)}
-                />
-                <div>Valor actual: {inputValue}</div>
-              </div>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 1)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                operacion asignada
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 2)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                operador en ruta
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 3)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                operador llega en cortina
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 4)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                operador en carga
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 5)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                operacion salida
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 6)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                {" "}
-                almacenista en entrega
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 7)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                {" "}
-                operador entragada
-              </button>
-              <button
-                onClick={() => cambiarEstatus(inputValue, 8)}
-                className="btn rounded bg-sky-600 p-1 text-white font-bold m-2"
-              >
-                {" "}
-                operador finalizada
-              </button>
-            </div>
+          
             <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">
               Lista de Operaciones
             </h1>

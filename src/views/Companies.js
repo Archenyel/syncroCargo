@@ -1,24 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
+import MapContainer from "../components/MapContainer";
 
 const Companies = () => {
   const [users, setUsers] = useState([]);
+  const [coox, setCoox] = useState();
+  const [cooy, setCooy] = useState();
   const [editar, setEditar] = useState(false);
+
   const [formData, setFormData] = useState({
     id: "",
     nombre: "",
-    direccion: "",
     estatus: "",
-
+    direccion: "",
+    PElongitud: "",
+    PElatitud: "",
   });
 
   const limpiar = () => {
     setFormData({
       id: "",
       nombre: "",
-      direccion: "",
       estatus: "",
+      direccion: "",
+      PElongitud: "",
+      PElatitud: "",
     });
   };
 
@@ -44,6 +51,11 @@ const Companies = () => {
     }
   };
 
+  const handleValueFromChild = (value) => {
+    setCoox(value.lng());
+    setCooy(value.lat());
+  };
+
   //funcion que ingresa los datos del forms a un objeto de la clase formdata, esto por que el codeginiter feo no soporta JSON asi que tenemos que enviarlo como formdata
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,8 +63,9 @@ const Companies = () => {
     const data = new FormData();
     data.append("nombre", formData.nombre);
     data.append("direccion", formData.direccion);
-    data.append("estatus", formData.estatus);
-
+    data.append("estatus", 1);
+    data.append("PElongitud", coox);
+    data.append("PElatitud", cooy);
 
     const url = "http://localhost/integradora/BACK/nueva_empresa";
 
@@ -78,7 +91,9 @@ const Companies = () => {
     data.append("id", formData.id);
     data.append("nombre", formData.nombre);
     data.append("direccion", formData.direccion);
-    data.append("estatus", formData.estatus);
+    data.append("estatus", 1);
+    data.append("PElongitud", coox);
+    data.append("PElatitud", cooy);
 
     const url = "http://localhost/integradora/BACK/cambio_empresa";
 
@@ -119,68 +134,82 @@ const Companies = () => {
 
   return (
     <div class="min-h-screen bg-gray-50/50">
-      <SideBar/>
-      <div className=" p-4 xl:ml-80">
-      <div className="App">
-        <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">Lista de Empresas</h1>
-        <button onClick={fetchUsers} className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"> ver empresas</button>
-        <table className="table-auto text-center">
-          <thead className="border-4 border-sky-700 ">
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Direccion</th>
-              <th>Estatus</th>
-              <th>Editar</th>
-              <th>Estatus</th>
-            </tr>
-          </thead>
-          <tbody className="border-4 border-sky-700">
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="p-3">{user.id}</td>
-                <td className="p-3">{user.nombre}</td>
-                <td className="p-3">{user.direccion}</td>
-                <td className="p-3">{user.estatus}</td>
-                <td className="p-3">
-                  <button
-                    onClick={() => {
-                      editarCampos(user);
-                      setEditar(true);
-                    }}
-                    className="bg-green-700 p-2 rounded text-white hover:bg-green-400"
-                  >
-                    {" "}
-                    Editar{" "}
-                  </button>
-                </td>
-                <td className="p-3">
-                  <button onClick={() => cambiarEstatus(user.id)}
-                    className="bg-orange-500 p-2 rounded text-white hover:bg-orange-400">
-                    {" "}
-                    Estatus{" "}
-                  </button>
-                </td>
+      <SideBar />
+      <div className=" p-4 xl:ml-80  ">
+        <div className="App">
+          <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">
+            Lista de Empresas
+          </h1>
+          <button
+            onClick={fetchUsers}
+            className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
+          >
+            {" "}
+            ver empresas
+          </button>
+          <table className="table-auto text-center">
+            <thead className="border-4 border-sky-700 ">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>Estatus</th>
+                <th>Editar</th>
+                <th>Estatus</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div>
-        {editar ? <h2 className="font-semibold text-2xl mt-7"> Editar Empresa</h2> : <h2 className="font-semibold text-2xl mt-7">Registrar Empresa</h2>}
-        <form onSubmit={editar ? actualizar : handleSubmit} className="my-5">
-          <div>
-            <label>Nombre:</label>
-            <input
-              className="rounded border-2 border-teal-700/100 m-3"
-              required
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
+            </thead>
+            <tbody className="border-4 border-sky-700">
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td className="p-3">{user.id}</td>
+                  <td className="p-3">{user.nombre}</td>
+                  <td className="p-3">{user.direccion}</td>
+                  <td className="p-3">{user.estatus}</td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => {
+                        editarCampos(user);
+                        setEditar(true);
+                      }}
+                      className="bg-green-700 p-2 rounded text-white hover:bg-green-400"
+                    >
+                      {" "}
+                      Editar{" "}
+                    </button>
+                  </td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => cambiarEstatus(user.id)}
+                      className="bg-orange-500 p-2 rounded text-white hover:bg-orange-400"
+                    >
+                      {" "}
+                      Estatus{" "}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          {editar ? (
+            <h2 className="font-semibold text-2xl mt-7"> Editar Empresa</h2>
+          ) : (
+            <h2 className="font-semibold text-2xl mt-7">Registrar Empresa</h2>
+          )}
+          <form onSubmit={editar ? actualizar : handleSubmit} className="my-5">
+            <div>
+              <label>Nombre:</label>
+              <input
+                className="rounded border-2 border-teal-700/100 m-3"
+                required
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+              />
+            </div>
+            {/* <div>
             <label>direccion:</label>
             <input
               className="rounded border-2 border-teal-700/100 m-3"
@@ -189,11 +218,22 @@ const Companies = () => {
               value={formData.direccion}
               onChange={handleChange}
             />
-          </div>
-          <button className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
-           type="submit">{editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}</button>
-        </form>
-      </div>
+          </div> */}
+            <div>
+              <p>Seleccione la empresa en el mapa</p>
+              <p>Las coordenadas son: </p>
+              <p>Latitud: {cooy}</p>
+              <p>Longitu: {coox}</p>
+              <MapContainer onValueChange={handleValueFromChild} />
+            </div>
+            <button
+              className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+              type="submit"
+            >
+              {editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
