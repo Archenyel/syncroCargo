@@ -43,7 +43,7 @@ function Login() {
       if (response.ok) {
         const data = await response.json();
         console.log(data.resultado[0].rol)
-        if (data.resultado[0].rol === "2") {
+        if (data.resultado[0].rol === "1") {
           sessionStorage.setItem("user", JSON.stringify(data));
           navigation("/Operations");
         } else {
