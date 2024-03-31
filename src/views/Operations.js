@@ -176,6 +176,7 @@ const Operations = () => {
     data.append("empresa", formData.empresa);
     data.append("tipo", formData.tipo);
     data.append("descripcion", formData.descripcion);
+    data.append("operador", formData.operador);
     data.append("producto", formData.producto);
     data.append("cantidad", formData.cantidad);
     data.append("estatus", formData.estatus);

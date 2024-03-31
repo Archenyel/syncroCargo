@@ -4,6 +4,8 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import BubbleChart from "../components/Grafica2";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbo3nsU9HlZ9kkFm5j8RmNe7XFulAa9pM",
@@ -76,6 +78,12 @@ const Graphics = () => {
       <div className=" p-4 xl:ml-80">
         <div>graphicassassssss</div>
         <HighchartsReact highcharts={Highcharts} options={options} />
+      </div>
+      <div className=" p-4 xl:ml-80">
+        <div>graphicassassssss</div>
+        <div> {/* Envuelve el componente BubbleChart con un contenedor div */}
+          <BubbleChart />
+        </div>
       </div>
     </div>
   );
