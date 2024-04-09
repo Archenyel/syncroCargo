@@ -36,7 +36,7 @@ function Login() {
       formData.append("email", formValues.email);
       formData.append("password", formValues.password);
 
-      const response = await fetch("http://localhost/integradora/Back/login", {
+      const response = await fetch(`${IP.IPUrl}/login`, {
         method: "POST",
         body: formData,
       })

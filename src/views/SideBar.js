@@ -196,12 +196,13 @@ export default function SideBar() {
               </p>
             </li>
             <li>
-              <button onClick={handleLogout}> {/**Hacer un LOGOUT */}
+              <div> {/**Hacer un LOGOUT */}
                 <button
                   className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg  text-white 
                   hover:bg-gradient-to-tr hover:from-red-600 to-red-400
                   hover:shadow-lg hover:shadow-red-500/40 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
                   type="button"
+                  onClick={handleLogout}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +221,7 @@ export default function SideBar() {
                     Salir
                   </p>
                 </button>
-              </button>
+              </div>
             </li>
           </ul>
         </div>

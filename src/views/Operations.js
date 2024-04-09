@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import IP from "../components/IP";
 import SideBar from "./SideBar";
 
 const Operations = () => {
@@ -23,9 +27,15 @@ const Operations = () => {
     descripcion: "",
     cantidad: "",
     estatus: "",
-    fechaConclusionEstimada: "",
     cortina: "",
   });
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [selectedDescription, setSelectedDescription] = useState("");
+
+  const toggleDescription = (description) => {
+    setShowFullDescription(!showFullDescription);
+    setSelectedDescription(description);
+  };
 
   const [formData2, setFormData2] = useState({
     id: "",
@@ -70,9 +80,7 @@ const Operations = () => {
   //peticion usando fetch nativo de js para obtener los datos del backend de los empleados
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_operaciones"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_operaciones`);
       setData(response.data.operaciones);
     } catch (error) {
       console.error("Error:", error);
@@ -81,9 +89,7 @@ const Operations = () => {
 
   const getCortinas = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_cortinas"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_cortinas`);
       setCortinas(response.data.cortinas);
     } catch (error) {
       console.error("Error:", error);
@@ -92,9 +98,7 @@ const Operations = () => {
 
   const getPersonal = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_personal"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_personal`);
       setEmpleados(response.data.personal);
     } catch (error) {
       console.error("Error:", error);
@@ -103,9 +107,7 @@ const Operations = () => {
 
   const getOperadores = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_operadores"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_operadores`);
       setOperadores(response.data.personal);
     } catch (error) {
       console.error("Error:", error);
@@ -114,9 +116,7 @@ const Operations = () => {
 
   const getAlmacenistas = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_almacenistas"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_almacenistas`);
       setAlmacenistas(response.data.personal);
     } catch (error) {
       console.error("Error:", error);
@@ -125,9 +125,7 @@ const Operations = () => {
 
   const getProductos = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_productos"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_productos`);
       setProductos(response.data.productos);
     } catch (error) {
       console.error("Error:", error);
@@ -136,9 +134,7 @@ const Operations = () => {
 
   const getEmpresas = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_empresas"
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_empresas`);
       setEmpresas(response.data.empresas);
     } catch (error) {
       console.error("Error:", error);
@@ -151,7 +147,7 @@ const Operations = () => {
     data.append("id", id);
     data.append("estatus", estatus);
 
-    const url = "http://localhost/integradora/BACK/operacionEstatus";
+    const url = `${IP.IPUrl}/operacionEstatus`;
 
     axios
       .post(url, data, {
@@ -169,7 +165,7 @@ const Operations = () => {
   };
 
   //funcion que ingresa los datos del forms a un objeto de la clase formdata, esto por que el codeginiter feo no soporta JSON asi que tenemos que enviarlo como formdata
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
@@ -177,27 +173,24 @@ const Operations = () => {
     data.append("tipo", formData.tipo);
     data.append("descripcion", formData.descripcion);
     data.append("operador", formData.operador);
+    data.append("almacenista", formData.almacenista);
     data.append("producto", formData.producto);
     data.append("cantidad", formData.cantidad);
     data.append("estatus", formData.estatus);
-    data.append("fechaConclusionEstimada", formData.fechaConclusionEstimada);
 
-    console.log(data);
-    const url = "http://localhost/integradora/BACK/nueva_operacion";
-
-    axios
-      .post(url, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        limpiar();
-        fetchUsers();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.log(formData);
+    const url = `${IP.IPUrl}/nueva_operacion`;
+    const response = await fetch(url, {
+      method: "POST",
+      body: data,
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      toast.done("Se ha agregado una operacion");
+    } else {
+      toast.error("Error al agregar la operacion");
+    }
   };
 
   const actualizar = (e) => {
@@ -213,7 +206,7 @@ const Operations = () => {
     data.append("fechaConclusionEstimada", formData.fechaConclusionEstimada);
     data.append("cortina", formData.cortina);
 
-    const url = "http://localhost/integradora/BACK/cambio_operacion";
+    const url = `${IP.IPUrl}/cambio_operacion`;
 
     axios
       .post(url, data, {
@@ -237,7 +230,7 @@ const Operations = () => {
 
     console.log(data);
 
-    const url = "http://localhost/integradora/BACK/operacionEstatus";
+    const url = `${IP.IPUrl}/operacionEstatus`;
 
     axios
       .post(url, data, {
@@ -289,11 +282,10 @@ const Operations = () => {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <SideBar/>
+      <SideBar />
       <div className=" p-4 xl:ml-80">
         <>
           <div className="App">
-          
             <h1 className="text-2xl text-sky-700 tracking-wide font-semibold">
               Lista de Operaciones
             </h1>
@@ -311,70 +303,98 @@ const Operations = () => {
               {" "}
               ver operaciones concluidas
             </button>
-            <table className="table-auto text-center">
-              <thead className="border-4 border-sky-700 ">
-                <tr>
-                  <th>ID</th>
-                  <th>empresa</th>
-                  <th>tipo</th>
-                  <th>operador</th>
-                  <th>almacenista</th>
-                  <th>producto</th>
-                  <th>descripcion</th>
-                  <th>cantidad</th>
-                  <th>fecha fin</th>
-                  <th>cortina</th>
-                  <th>Estatus</th>
-                  <th>Editar</th>
-                  <th>Baja</th>
-                </tr>
-              </thead>
-              <tbody className="border-4 border-sky-700">
-                {data.map((user) => (
-                  <tr key={user.id} className="border-3 border-sky-500">
-                    <td className="p-3 ">{user.id}</td>
-                    <td className="p-3 ">{user.empresa}</td>
-                    <td className="p-3 ">
-                      {user.tipo === "1" ? "carga" : "descarga"}
-                    </td>
-                    <td className="p-3 ">{user.operador}</td>
-                    <td className="p-3 ">{user.almacenista}</td>
-                    <td className="p-3 ">{user.producto}</td>
-                    <td className="p-3 ">{user.descripcionOperacion}</td>
-                    <td className="p-3 ">{user.cantidad}</td>
-                    <td className="p-3 ">{user.fechaConclusionEstimada}</td>
-                    <td className="p-3 ">
-                      {user.cortina === 99 ? user.cortina : "sin asignar "}
-                    </td>
-                    <td className="p-3 ">{estatus(user.estatus)}</td>
-                    <td className="p-3 ">
-                      <button
-                        className="bg-orange-500 p-2 rounded text-white hover:bg-orange-300"
-                        onClick={() => {
-                          editarCampos(user);
-                          setEditar(true);
-                        }}
-                      >
-                        {" "}
-                        Editar{" "}
-                      </button>
-                    </td>
-                    <td className="p-3 ">
-                      <button
-                        className="bg-red-500 p-2 rounded text-white hover:bg-orange-300"
-                        onClick={() => cambiarEstatus(user.id)}
-                      >
-                        Dar de baja
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="table-auto text-center w-full border-collapse border-2 border-teal-500">
+                <caption className="caption-top m-3">Tabla de operaciones</caption>
+                {console.log(data)}
+                <thead className="border border-teal-700 pb-3">
+                  <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
+                    <th>ID</th>
+                    <th>Empresa</th>
+                    <th>Tipo</th>
+                    <th>Operador</th>
+                    <th>Almacenista</th>
+                    <th>Producto</th>
+                    <th>Descripcion</th>
+                    <th>Cantidad</th>
+                    <th>Cortina</th>
+                    <th>Estatus</th>
+                    <th>Editar</th>
+                    <th>Baja</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.map((user, index) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
+                    >
+                      <td className="">{user.id}</td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.empresa}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.tipo === "1" ? "carga" : "descarga"}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.operador}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.almacenista}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.producto}
+                      </td>
+                      <td
+                        className="p-3 border-2 border-teal-500 cursor-pointer"
+                        onClick={() =>
+                          toggleDescription(user.descripcionOperacion)
+                        }
+                        title={user.descripcionOperacion}
+                      >
+                        {showFullDescription
+                          ? user.descripcionOperacion
+                          : `${user.descripcionOperacion.substring(0, 20)}...`}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.cantidad}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {user.cortina === 99 ? user.cortina : "sin asignar "}
+                      </td>
+                      <td className="border-2 border-teal-500 ">
+                        {estatus(user.estatus)}
+                      </td>
+                      <td className="">
+                        <button
+                          className="bg-blue-500 p-2 rounded text-white hover:bg-gray-300"
+                          onClick={() => {
+                            editarCampos(user);
+                            setEditar(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                      </td>
+                      <td className="">
+                        <button
+                          className="bg-red-500 p-2 rounded text-white hover:bg-red-200"
+                          onClick={() => cambiarEstatus(user.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <br />
           {editar ? (
             <>
+              <h2 className="font-semibold text-2xl mt-7 mb-3 ml-4">
+                Actualizar Operacion
+              </h2>
               <table className="table-auto text-center border-4 border-sky-700">
                 <tr>
                   <th> Datos </th>
@@ -543,7 +563,7 @@ const Operations = () => {
                         setEditar(false);
                         limpiar();
                       }}
-                      className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                      className="btn bg-gray-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
                     >
                       {"cancelar".toLocaleUpperCase()}
                     </button>
@@ -560,18 +580,15 @@ const Operations = () => {
               </table>
             </>
           ) : (
-            <></>
-          )}
-          <div className="mt-6">
-            {editar ? (
-              <h2 className="font-semibold text-2xl mt-7"> Editar Operacion</h2>
-            ) : (
+            <>
               <h2 className="font-semibold text-2xl mt-7">
                 Registrar Operacion
               </h2>
-            )}
-
-            <form onSubmit={handleSubmit} className="my-5">
+            </>
+          )}
+          {/*REGISTRO DE LA OPERACION*/}
+          <div className="mt-6">
+            <form onSubmit={handleSubmit} className="my-5" hidden={editar}>
               <div>
                 <label className="m-3">Empresa:</label>
                 <select
@@ -579,7 +596,7 @@ const Operations = () => {
                   id="empresa"
                   value={formData.empresa}
                   onChange={handleChange}
-                  className="border-4 border-teal-500/100"
+                  className="rounded border-2 border-teal-500/100"
                 >
                   <option value=""> Selecciona una empresa </option>
                   {empresas.map((empresa) => (
@@ -608,6 +625,7 @@ const Operations = () => {
                   id="producto"
                   value={formData.producto}
                   onChange={handleChange}
+                  className="rounded border-2 border-teal-700/100 m-3"
                 >
                   <option> Selecciona un producto </option>
                   {productos.map((producto) => (
@@ -617,7 +635,7 @@ const Operations = () => {
               </div>
               <div>
                 <label className="m-3">
-                  cantidad:
+                  Cantidad:
                   <input
                     className="rounded border-2 border-teal-700/100 m-3"
                     type="number"
@@ -630,7 +648,7 @@ const Operations = () => {
               </div>
               <div>
                 <label className="m-3">
-                  Operador
+                  <p className="font-bold ">Operador</p>
                   <select
                     className="rounded border-2 border-teal-700/100 m-3"
                     name="operador"
@@ -638,7 +656,7 @@ const Operations = () => {
                     value={formData.operador}
                     onChange={handleChange}
                   >
-                    <option> Operador </option>
+                    <option value={null}> Selecciona un Operador </option>
                     {operadores.map((empleados) => (
                       <option value={empleados.id}>{empleados.nombre} </option>
                     ))}
@@ -646,29 +664,35 @@ const Operations = () => {
                 </label>
               </div>
               <div>
-                <label htmlFor="fecha" className="m-3">
-                  Selecciona una fecha:
-                </label>
-                <input
-                  type="date"
-                  id="fechaConclusionEstimada"
-                  name="fechaConclusionEstimada"
-                  value={formData.fechaConclusionEstimada}
-                  onChange={handleChange}
-                  className="border-2 border-teal-500/100 "
-                ></input>
-              </div>
-              <div className="mb-4">
+                {/* SELECCIONAR A UN ALMACENISTA */}
                 <label className="m-3">
-                  descripcion:
-                  <input
-                    className=" rounded border-2 border-teal-700/100 mt-4 mx-4 p-5"
-                    type="text"
+                  <p className="font-bold ">Almacenista</p>
+                  <select
+                    className="rounded border-2 border-teal-700/100 m-3"
+                    name="almacenista"
+                    id="almacenista"
+                    value={formData.almacenista}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona un almacenista </option>
+                    {almacenistas.map((almacenista) => (
+                      <option value={almacenista.id}>
+                        {almacenista.nombre}{" "}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="mb-4 w-1/2">
+                <label className="m-3 block">
+                  Descripción:
+                  <textarea
+                    className="rounded border-2 border-teal-700/100 mt-4 mx-4 p-2 w-full h-32 resize-none"
                     id="descripcion"
                     name="descripcion"
                     value={formData.descripcion}
                     onChange={handleChange}
-                  ></input>
+                  ></textarea>
                 </label>
               </div>
               <button
@@ -681,6 +705,7 @@ const Operations = () => {
           </div>
         </>
       </div>
+      <ToastContainer />
     </div>
   );
 };
