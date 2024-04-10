@@ -187,7 +187,8 @@ const Operations = () => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      toast.done("Se ha agregado una operacion");
+      toast.success("Se ha agregado una operacion");
+      limpiar();
     } else {
       toast.error("Error al agregar la operacion");
     }
@@ -327,7 +328,7 @@ const Operations = () => {
                   {data.map((user, index) => (
                     <tr
                       key={index}
-                      className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
+                      className="hover:bg-gradient-to-br from-gray-800 to-gray-900 hover:text-white hover:font-semibold border-2 border-teal-500"
                     >
                       <td className="">{user.id}</td>
                       <td className="border-2 border-teal-500 ">

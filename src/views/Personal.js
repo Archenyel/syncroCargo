@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
+import IP from '../components/IP'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faHandshakeAltSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Personal = () => {
   const [users, setUsers] = useState([]);
@@ -43,7 +46,7 @@ const Personal = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost/integradora/BACK/get_personal"
+        `${IP.IPUrl}/get_personal`
       );
       setUsers(response.data.personal);
     } catch (error) {
@@ -64,7 +67,7 @@ const Personal = () => {
     data.append("password", formData.password);
     data.append("rol", formData.rol);
 
-    const url = "http://localhost/integradora/BACK/nuevo_personal";
+    const url = `${IP.IPUrl}/nuevo_personal`;
 
     axios
       .post(url, data, {
@@ -94,7 +97,7 @@ const Personal = () => {
     data.append("password", formData.password);
     data.append("rol", formData.rol);
 
-    const url = "http://localhost/integradora/BACK/cambio_personal";
+    const url = `${IP.IPUrl}/cambio_personal`;
 
     axios
       .post(url, data, {
@@ -115,7 +118,7 @@ const Personal = () => {
     const data = new FormData();
     data.append("id", e);
 
-    const url = "http://localhost/integradora/BACK/baja_personal";
+    const url =  `${IP.IPUrl}/baja_personal`;
 
     axios
       .post(url, data, {
@@ -139,67 +142,65 @@ const Personal = () => {
           <div className="App">
             <h1 className="font-semibold text-2xl mt-7">Lista de Usuarios</h1>
           <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 my-4 font-semibold"
+            className="btn bg-sky-600/100 hover:bg-sky-400 rounded text-white p-2 my-4 font-semibold"
             onClick={fetchUsers}
           >
-            {" "}
             ver empleados
           </button>
-            <table className="table-auto text-center">
-              <thead className="border-4 border-sky-700 mx-3 px-3">
-                <tr>
+            <div className="overflow-x-auto">
+            <table className="table-auto text-center w-full border-collapse border-2 border-teal-700">
+            <caption className="caption-top m-3">Tabla de empleados</caption>
+              <thead className="border border-teal-700 pb-3">
+                <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
                   <th>ID</th>
                   <th>Nombre</th>
-                  <th>segundoNombre</th>
-                  <th>apellido 1</th>
-                  <th>apellido 2</th>
-                  <th>estatus</th>
-                  <th>rol</th>
-                  <th>registro</th>
-                  <th>Editar</th>
+                  <th>Segundo N</th>
+                  <th>Apellido P</th>
+                  <th>Apellido M</th>
                   <th>Estatus</th>
+                  <th>Rol</th>
+                  <th>Fecha Ingreso</th>
+                  <th>Editar</th>
+                  <th>Suspender</th>
                 </tr>
               </thead>
-              <tbody className="border-4 border-sky-700">
+              <tbody className="border-2 border-teal-700">
                 {users.map((user) => (
-                  <tr key={user.id} className="border-3 border-sky-500">
-                    <td className="p-3">{user.id}</td>
-                    <td className="p-3">{user.nombre}</td>
-                    <td className="p-3">{user.segundoNombre}</td>
-                    <td className="p-3">{user.apellidoP}</td>
-                    <td className="p-3">{user.apellidoM}</td>
-                    <td className="p-4">{user.estatus}</td>
-                    <td className="p-4">{user.rol}</td>
-                    <td className="p-3">{user.registro}</td>
-                    <td className="p-3">
+                  <tr key={user.id} 
+                  className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-700">
+                    <td className="border-2 border-teal-500">{user.id}</td>
+                    <td className="border-2 border-teal-500">{user.nombre}</td>
+                    <td className="border-2 border-teal-500">{user.segundoNombre}</td>
+                    <td className="border-2 border-teal-500">{user.apellidoP}</td>
+                    <td className="border-2 border-teal-500">{user.apellidoM}</td>
+                    <td className="border-2 border-teal-500">{user.estatus}</td>
+                    <td className="border-2 border-teal-500">{user.rol}</td>
+                    <td className="border-2 border-teal-500">{user.registro}</td>
+                    <td className="">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-blue-600/100 hover:bg-gray-400 rounded text-white p-3 font-semibold"
                         onClick={() => {
                           editarCampos(user);
                           setEditar(true);
                         }}
                       >
-                        {" "}
-                        Editar{" "}
+                        <FontAwesomeIcon icon={faEdit}/>
                       </button>
                     </td>
-                    <td className="p-3">
+                    <td className="">
                       <button
-                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-red-600/100 hover:bg-orange-400 rounded text-white p-3 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
-                        {" "}
-                        Estatus{" "}
+                        <FontAwesomeIcon icon={faHandshakeAltSlash}/>
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
-          <br />
-          <br />
-          <br />
           <div>
             {editar ? <h1 className="font-semibold text-2xl mt-7"> Editar empleado</h1> : <h1 className="font-semibold text-2xl mt-7">Registrar empleado</h1>}
             <form onSubmit={editar ? actualizar : handleSubmit}>

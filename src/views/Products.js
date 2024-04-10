@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import IP from '../components/IP';
+import { faEdit, faExchange } from "@fortawesome/free-solid-svg-icons";
+import { faMarkdown } from "@fortawesome/free-brands-svg-icons";
 const Products = () => {
   const [users, setUsers] = useState([]);
   const [editar, setEditar] = useState(false);
@@ -25,7 +29,7 @@ const Products = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost/integradora/BACK/get_productos"
+        `${IP.IPUrl}/get_productos`
       );
       setUsers(response.data.productos);
     } catch (error) {
@@ -55,7 +59,7 @@ const Products = () => {
     data.append("estatus", formData.estatus);
     data.append("stock", formData.stock);
 
-    const url = "http://localhost/integradora/BACK/nuevo_producto";
+    const url = `${IP.IPUrl}/nuevo_producto`;
 
     axios
       .post(url, data, {
@@ -76,7 +80,7 @@ const Products = () => {
     const data = new FormData();
     data.append("id", e);
 
-    const url = "http://localhost/integradora/BACK/baja_producto";
+    const url = `${IP.IPUrl}/baja_producto`;
 
     axios
       .post(url, data, {
@@ -101,7 +105,7 @@ const Products = () => {
     data.append("estatus", formData.estatus);
     data.append("stock", formData.stock);
 
-    const url = "http://localhost/integradora/BACK/cambio_producto";
+    const url = `${IP.IPUrl}/cambio_producto`;
 
     axios
       .post(url, data, {
@@ -127,15 +131,17 @@ const Products = () => {
           <div className="App">
             <h1 className="font-semibold text-2xl mt-7">Lista de Productos</h1>
           <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold my-4"
+            className="btn bg-sky-600/100 hover:bg-sky-400 rounded text-white p-2 font-semibold my-4"
             onClick={fetchUsers}
           >
             {" "}
             ver productos
           </button>
-            <table className="table-auto text-center">
-              <thead className="border-4 border-sky-700 ">
-                <tr>
+          <div className="overflow-x-auto w-1/2">
+            <table className="table-auto text-center w-full border-collapse border-2 border-teal-500">
+              <caption className="caption-top m-3">Tabla de Productos</caption>
+              <thead>
+                <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
                   <th>ID</th>
                   <th>Nombre</th>
                   <th>Estatus</th>
@@ -144,38 +150,37 @@ const Products = () => {
                   <th>Estatus</th>
                 </tr>
               </thead>
-              <tbody className="border-4 border-sky-700">
+              <tbody className="x">
                 {users.map((user) => (
-                  <tr key={user.id} className="border-3 border-sky-500">
-                    <td className="p-3">{user.id}</td>
-                    <td className="p-3">{user.nombre}</td>
-                    <td className="p-3">{user.estatus}</td>
-                    <td className="p-3">{user.stock}</td>
-                    <td className="p-3">
+                  <tr key={user.id} className="">
+                    <td className="">{user.id}</td>
+                    <td className="">{user.nombre}</td>
+                    <td className="">{user.estatus}</td>
+                    <td className="">{user.stock}</td>
+                    <td className="">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-blue-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
                           editarCampos(user);
                           setEditar(true);
                         }}
                       >
-                        {" "}
-                        Editar{" "}
+                        <FontAwesomeIcon icon={faEdit}/>
                       </button>
                     </td>
-                    <td className="p-3">
+                    <td className="">
                       <button
-                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-red-600/100 hover:bg-orange-500 rounded text-white p-2 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
-                        {" "}
-                        Estatus{" "}
+                        <FontAwesomeIcon icon={faExchange}/>
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
           </div>
           <br />
           <br />

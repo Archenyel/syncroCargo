@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
-
+import IP from '../components/IP';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {ToastContainer, toast} from 'react-toastify';
+import { faEdit, faExchange } from "@fortawesome/free-solid-svg-icons";
 const Cortinas = () => {
   const [users, setUsers] = useState([]);
   const [editar, setEditar] = useState(false);
@@ -25,9 +28,10 @@ const Cortinas = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost/integradora/BACK/get_cortinas"
+        `${IP.IPUrl}/get_cortinas`
       );
       setUsers(response.data.cortinas);
+      toast.success('Cortinas consultadas')
     } catch (error) {
       console.error("Error:", error);
     }
@@ -48,8 +52,7 @@ const Cortinas = () => {
     const data = new FormData();
     data.append("numero", formData.numero);
     data.append("estatus", formData.estatus);
-
-    const url = "http://localhost/integradora/BACK/nueva_cortina";
+    const url = `${IP.IPUrl}/nueva_cortina`;
 
     axios
       .post(url, data, {
@@ -70,7 +73,7 @@ const Cortinas = () => {
     const data = new FormData();
     data.append("id", e);
 
-    const url = "http://localhost/integradora/BACK/baja_cortina";
+    const url = `${IP.IPUrl}/baja_cortina`;
 
     axios
       .post(url, data, {
@@ -94,7 +97,7 @@ const Cortinas = () => {
     data.append("numero", formData.numero);
     data.append("estatus", formData.estatus);
 
-    const url = "http://localhost/integradora/BACK/cambio_cortina";
+    const url = `${IP.IPUrl}/cambio_cortina`;
 
     axios
       .post(url, data, {
@@ -125,9 +128,11 @@ const Cortinas = () => {
             {" "}
             ver cortinas
           </button>
-            <table className="table-auto text-center">
-              <thead className="border-4 border-sky-700 ">
-                <tr>
+            <div className="overflow-x-auto">
+            <table className="table-auto text-center w-1/4 border-collapse border-2 border-teal-500">
+            <caption className="caption-top m-3">Tabla de Cortinas</caption>
+              <thead>
+                <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
                   <th>ID</th>
                   <th>Numero</th>
                   <th>Estatus</th>
@@ -135,37 +140,38 @@ const Cortinas = () => {
                   <th>Estatus</th>
                 </tr>
               </thead>
-              <tbody className="border-4 border-sky-700">
+              <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className="border-3 border-sky-500">
-                    <td className="p-3">{user.id}</td>
-                    <td className="p-3">{user.numero}</td>
-                    <td className="p-3">{user.estatus}</td>
-                    <td className="p-3">
+                  <tr key={user.id} 
+                  className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
+                  >
+                    <td className="">{user.id}</td>
+                    <td className="">{user.numero}</td>
+                    <td className="">{user.estatus}</td>
+                    <td className="">
                       <button
-                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-blue-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
                         onClick={() => {
                           editarCampos(user);
                           setEditar(true);
                         }}
                       >
-                        {" "}
-                        Editar{" "}
+                        <FontAwesomeIcon icon={faEdit}/>
                       </button>
                     </td>
                     <td className="p-3">
                       <button
-                        className="btn bg-orange-600/100 hover:bg-orange-400 rounded text-white p-2 font-semibold"
+                        className="btn bg-red-600/100 hover:bg-orange-500 rounded text-white p-2 font-semibold"
                         onClick={() => cambiarEstatus(user.id)}
                       >
-                        {" "}
-                        Estatus{" "}
+                        <FontAwesomeIcon icon={faExchange}/>
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
           <br />
           <br />
@@ -194,6 +200,7 @@ const Cortinas = () => {
           </div>
         </>
       </div>
+      <ToastContainer/>
     </div>
   );
 };

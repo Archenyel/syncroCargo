@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
 import MapContainer from "../components/MapContainer";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faExchange } from "@fortawesome/free-solid-svg-icons";
+import {ToastContainer, toast} from 'react-toastify';
+import IP from '../components/IP'
 const Companies = () => {
   const [users, setUsers] = useState([]);
   const [coox, setCoox] = useState();
@@ -42,8 +45,7 @@ const Companies = () => {
   //peticion usando fetch nativo de js para obtener los datos del backend de los empleados
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost/integradora/BACK/get_empresas"
+      const response = await axios.get(`${IP.IPUrl}/get_empresas`
       );
       setUsers(response.data.empresas);
     } catch (error) {
@@ -67,7 +69,7 @@ const Companies = () => {
     data.append("PElongitud", coox);
     data.append("PElatitud", cooy);
 
-    const url = "http://localhost/integradora/BACK/nueva_empresa";
+    const url = `${IP.IPUrl}/nueva_empresa`;
 
     axios
       .post(url, data, {
@@ -78,6 +80,7 @@ const Companies = () => {
       .then((response) => {
         limpiar();
         fetchUsers();
+        toast.success('Nueva empresa agregada exitosamente !')
       })
       .catch((error) => {
         console.error(error);
@@ -95,7 +98,7 @@ const Companies = () => {
     data.append("PElongitud", coox);
     data.append("PElatitud", cooy);
 
-    const url = "http://localhost/integradora/BACK/cambio_empresa";
+    const url = `${IP.IPUrl}/cambio_empresa`;
 
     axios
       .post(url, data, {
@@ -116,7 +119,7 @@ const Companies = () => {
     const data = new FormData();
     data.append("id", e);
 
-    const url = "http://localhost/integradora/BACK/baja_empresa";
+    const url = `${IP.IPUrl}/baja_empresa`;
 
     axios
       .post(url, data, {
@@ -144,11 +147,11 @@ const Companies = () => {
             onClick={fetchUsers}
             className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
           >
-            {" "}
             ver empresas
           </button>
-          <table className="table-auto text-center">
-            <thead className="border-4 border-sky-700 ">
+          <div className="overflow-x-auto">
+          <table className="table-auto text-center w-1/2 border-collapse border-2 border-teal-500">
+            <thead className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
               <tr>
                 <th>ID</th>
                 <th>Nombre</th>
@@ -158,38 +161,39 @@ const Companies = () => {
                 <th>Estatus</th>
               </tr>
             </thead>
-            <tbody className="border-4 border-sky-700">
+            <tbody className="">
               {users.map((user) => (
-                <tr key={user.id}>
-                  <td className="p-3">{user.id}</td>
-                  <td className="p-3">{user.nombre}</td>
-                  <td className="p-3">{user.direccion}</td>
-                  <td className="p-3">{user.estatus}</td>
-                  <td className="p-3">
+                <tr key={user.id} 
+                className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
+                >
+                  <td className="">{user.id}</td>
+                  <td className="">{user.nombre}</td>
+                  <td className="">{user.direccion}</td>
+                  <td className="">{user.estatus}</td>
+                  <td className="">
                     <button
                       onClick={() => {
                         editarCampos(user);
                         setEditar(true);
                       }}
-                      className="bg-green-700 p-2 rounded text-white hover:bg-green-400"
+                      className="bg-blue-700 p-2 rounded text-white hover:bg-gray-400"
                     >
-                      {" "}
-                      Editar{" "}
+                      <FontAwesomeIcon icon={faEdit}/>
                     </button>
                   </td>
-                  <td className="p-3">
+                  <td className="">
                     <button
                       onClick={() => cambiarEstatus(user.id)}
-                      className="bg-orange-500 p-2 rounded text-white hover:bg-orange-400"
+                      className="bg-red-500 p-2 rounded text-white hover:bg-orange-500"
                     >
-                      {" "}
-                      Estatus{" "}
+                      <FontAwesomeIcon icon={faExchange}/>
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
         <div>
           {editar ? (
@@ -220,7 +224,7 @@ const Companies = () => {
             />
           </div> */}
             <div>
-              <p>Seleccione la empresa en el mapa</p>
+              <p className="text-xl font-bold text-left text-sky-800 mt-3 mb-2 ">Seleccione la empresa en el mapa</p>
               <p>Las coordenadas son: </p>
               <p>Latitud: {cooy}</p>
               <p>Longitu: {coox}</p>
@@ -235,6 +239,7 @@ const Companies = () => {
           </form>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };
