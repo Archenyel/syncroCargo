@@ -14,6 +14,7 @@ const Operations = () => {
   const [empleados, setEmpleados] = useState([]);
   const [operadores, setOperadores] = useState([]);
   const [almacenistas, setAlmacenistas] = useState([]);
+  const [operaciones, setOperaciones] = useState([]);
   const [productos, setProductos] = useState([]);
   const [cortinas, setCortinas] = useState([]);
   const [editar, setEditar] = useState(false);
@@ -78,10 +79,10 @@ const Operations = () => {
   };
 
   //peticion usando fetch nativo de js para obtener los datos del backend de los empleados
-  const fetchUsers = async () => {
+  const fetchUsers = async (estado) => {
     try {
-      const response = await axios.get(`${IP.IPUrl}/get_operaciones`);
-      setData(response.data.operaciones);
+      const response = await axios.get(`${IP.IPUrl}/get_operaciones/${estado}`);
+      setOperaciones(response.data.operaciones);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -167,12 +168,9 @@ const Operations = () => {
   //funcion que ingresa los datos del forms a un objeto de la clase formdata, esto por que el codeginiter feo no soporta JSON asi que tenemos que enviarlo como formdata
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validar el formulario antes de enviar la solicitud
     const isValid = validateForm();
 
     if (!isValid) {
-      // Si la validación falla, muestra el mensaje de advertencia
       toast.warning("Llena el formulario correctamente");
       return;
     }
@@ -320,18 +318,25 @@ const Operations = () => {
               Lista de Operaciones
             </h1>
             <button
-              onClick={fetchUsers}
+              onClick={() => fetchUsers("activas")}
               className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
             >
               {" "}
               ver operaciones activas
             </button>
             <button
-              onClick={fetchUsers}
+              onClick={() => fetchUsers("concluidas")}
               className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
             >
               {" "}
               ver operaciones concluidas
+            </button>
+            <button
+              onClick={() => fetchUsers("pendientes")}
+              className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
+            >
+              {" "}
+              Ver operaciones pendientes
             </button>
             <div className="overflow-x-auto">
               <table className="table-auto text-center w-full border-collapse border-2 border-teal-500">
@@ -356,62 +361,67 @@ const Operations = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((user, index) => (
+                  {operaciones.map((operacion, index) => (
                     <tr
                       key={index}
                       className="hover:bg-gradient-to-br from-gray-800 to-gray-900 hover:text-white hover:font-semibold border-2 border-teal-500"
                     >
-                      <td className="">{user.id}</td>
+                      <td>{operacion.id}</td>
                       <td className="border-2 border-teal-500 ">
-                        {user.empresa}
+                        {operacion.empresa}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.tipo === "1" ? "carga" : "descarga"}
+                        {operacion.tipo === "1" ? "carga" : "descarga"}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.operador}
+                        {operacion.operador}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.almacenista}
+                        {operacion.almacenista}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.producto}
+                        {operacion.producto}
                       </td>
                       <td
                         className="p-3 border-2 border-teal-500 cursor-pointer"
                         onClick={() =>
-                          toggleDescription(user.descripcionOperacion)
+                          toggleDescription(operacion.descripcionOperacion)
                         }
-                        title={user.descripcionOperacion}
+                        title={operacion.descripcionOperacion}
                       >
                         {showFullDescription
-                          ? user.descripcionOperacion
-                          : `${user.descripcionOperacion.substring(0, 20)}...`}
+                          ? operacion.descripcionOperacion
+                          : `${operacion.descripcionOperacion.substring(
+                              0,
+                              20
+                            )}...`}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.cantidad}
+                        {operacion.cantidad}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {user.cortina === 99 ? user.cortina : "sin asignar "}
+                        {operacion.cortina === 99
+                          ? operacion.cortina
+                          : "sin asignar"}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {estatus(user.estatus)}
+                        {estatus(operacion.estatus)}
                       </td>
-                      <td className="">
+                      <td>
                         <button
                           className="bg-blue-500 p-2 rounded text-white hover:bg-gray-300"
                           onClick={() => {
-                            editarCampos(user);
+                            editarCampos(operacion);
                             setEditar(true);
                           }}
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </button>
                       </td>
-                      <td className="">
+                      <td>
                         <button
                           className="bg-red-500 p-2 rounded text-white hover:bg-red-200"
-                          onClick={() => cambiarEstatus(user.id)}
+                          onClick={() => cambiarEstatus(operacion.id)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
