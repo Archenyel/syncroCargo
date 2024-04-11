@@ -48,7 +48,6 @@ const Operations = () => {
     descripcion: "",
     cantidad: "",
     estatus: "",
-    fechaConclusionEstimada: "",
     cortina: "",
   });
 
@@ -63,13 +62,24 @@ const Operations = () => {
       descripcion: "",
       cantidad: "",
       estatus: "",
-      fechaConclusionEstimada: "",
       cortina: "",
     });
   };
 
   //setea los datos dentro de formData con los datos del usuario seleccionado en la tabla
   const editarCampos = (e) => {
+    setFormData({
+      id: e.id,
+      empresa: e.empresa,
+      tipo: e.tipo,
+      operador: e.operador,
+      almacenista: e.almacenista,
+      producto: e.producto,
+      descripcion: e.descripcion,
+      cantidad: e.cantidad,
+      estatus: e.estatus,
+      cortina: e.cortina,
+    });
     setFormData2(e);
   };
 
@@ -213,7 +223,6 @@ const Operations = () => {
       formData.producto === "" ||
       formData.cantidad === "" ||
       formData.operador === "" ||
-      formData.almacenista === "" ||
       formData.descripcion === ""
     ) {
       return false;
@@ -231,7 +240,6 @@ const Operations = () => {
     data.append("almacenista", formData.almacenista);
     data.append("descripcion", formData.descripcion);
     data.append("cantidad", formData.cantidad);
-    data.append("fechaConclusionEstimada", formData.fechaConclusionEstimada);
     data.append("cortina", formData.cortina);
 
     const url = `${IP.IPUrl}/cambio_operacion`;
@@ -400,7 +408,7 @@ const Operations = () => {
                         {operacion.cantidad}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {operacion.cortina === 99
+                        {operacion.cortina && operacion.cortina != 99
                           ? operacion.cortina
                           : "sin asignar"}
                       </td>
@@ -446,41 +454,36 @@ const Operations = () => {
                 <tr>
                   <th>ID:</th>
                   <td>{formData2.id}</td>
-                  <td>NA</td>
+                  <td>{formData2.id}</td>
                 </tr>
                 <tr>
                   <th>Empresa:</th>
                   <td>{formData2.empresa}</td>
                   <td>
-                    <select
-                      name="empresa"
+                    <input
+                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                      type="text"
                       id="empresa"
+                      name="empresa"
                       value={formData.empresa}
                       onChange={handleChange}
-                      className="rounded border-2 border-teal-700/100 m-3"
-                    >
-                      <option value=""> Selecciona una empresa </option>
-                      {empresas.map((empresa) => (
-                        <option value={empresa.id}>{empresa.nombre}</option>
-                      ))}
-                    </select>
+                      readOnly
+                    ></input>
                   </td>
                 </tr>
                 <tr>
                   <th>Tipo de operacion:</th>
-                  <td>{formData2.tipo}</td>
+                  <td>{formData2.tipo == "0" ? "Descarga" : "Carga"}</td>
                   <td>
-                    <select
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      name="tipo"
+                    <input
+                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                      type="text"
                       id="tipo"
+                      name="tipo"
                       value={formData.tipo}
                       onChange={handleChange}
-                    >
-                      <option value="">--Please choose an option--</option>
-                      <option value="1">carga</option>
-                      <option value="0">descarga</option>
-                    </select>
+                      readOnly
+                    ></input>
                   </td>
                 </tr>
                 <tr>
@@ -523,18 +526,15 @@ const Operations = () => {
                   <th>Producto:</th>
                   <td>{formData2.producto}</td>
                   <td>
-                    <select
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      name="producto"
+                    <input
+                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                      type="text"
                       id="producto"
+                      name="producto"
                       value={formData.producto}
                       onChange={handleChange}
-                    >
-                      <option> producto </option>
-                      {productos.map((producto) => (
-                        <option value={producto.id}>{producto.nombre}</option>
-                      ))}
-                    </select>
+                      readOnly
+                    ></input>
                   </td>
                 </tr>
                 <tr>
@@ -556,43 +556,35 @@ const Operations = () => {
                   <td>{formData2.cantidad}</td>
                   <td>
                     <input
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      type="number"
-                      name="cantidad"
+                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                      type="text"
                       id="cantidad"
+                      name="cantidad"
                       value={formData.cantidad}
                       onChange={handleChange}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Fecha estimada:</th>
-                  <td>{formData2.fechaConclusionEstimada}</td>
-                  <td>
-                    <input
-                      type="date"
-                      id="fechaConclusionEstimada"
-                      name="fechaConclusionEstimada"
-                      value={formData.fechaConclusionEstimada}
-                      onChange={handleChange}
-                      className="border-2 border-teal-500/100 "
+                      readOnly
                     ></input>
                   </td>
                 </tr>
                 <tr>
                   <th>Cortina:</th>
-                  <td>{formData2.cortina}</td>
+                  <td>
+                    {formData2.cortina && formData2.cortina != 99
+                      ? formData2.cortina
+                      : "Sin asignar"}
+                  </td>
                   <td>
                     <select
                       className="rounded border-2 border-teal-700/100 m-3"
                       name="cortina"
                       id="cortina"
-                      value={formData.cortina}
                       onChange={handleChange}
                     >
-                      <option> cortina </option>
+                      <option value="">Selecciona una cortina</option>
                       {cortinas.map((cortina) => (
-                        <option value={cortina.id}>{cortina.numero}</option>
+                        <option key={cortina.id} value={cortina.id}>
+                          {cortina.numero}
+                        </option>
                       ))}
                     </select>
                   </td>
@@ -656,8 +648,8 @@ const Operations = () => {
                   onChange={handleChange}
                 >
                   <option value="">--Please choose an option--</option>
-                  <option value="1">carga</option>
-                  <option value="0">descarga</option>
+                  <option value="1">Carga</option>
+                  <option value="0">Descarga</option>
                 </select>
               </div>
               <div>
@@ -701,26 +693,6 @@ const Operations = () => {
                     <option value={null}> Selecciona un Operador </option>
                     {operadores.map((empleados) => (
                       <option value={empleados.id}>{empleados.nombre} </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <div>
-                {/* SELECCIONAR A UN ALMACENISTA */}
-                <label className="m-3">
-                  <p className="font-bold ">Almacenista</p>
-                  <select
-                    className="rounded border-2 border-teal-700/100 m-3"
-                    name="almacenista"
-                    id="almacenista"
-                    value={formData.almacenista}
-                    onChange={handleChange}
-                  >
-                    <option>Selecciona un almacenista </option>
-                    {almacenistas.map((almacenista) => (
-                      <option value={almacenista.id}>
-                        {almacenista.nombre}{" "}
-                      </option>
                     ))}
                   </select>
                 </label>
