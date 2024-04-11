@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
-import IP from '../components/IP'
+import IP from "../components/IP";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { initializeApp } from "firebase/app";
@@ -45,8 +45,8 @@ const Graphics = () => {
         console.error("Error al obtener datos de Firestore:", error);
       }
     };
-    //fetchData();
-  },[]);
+    fetchData();
+  }, []);
 
   const options = {
     chart: {
@@ -71,7 +71,6 @@ const Graphics = () => {
     ],
   };
 
-  
   return (
     <div className="min-h-screen bg-gray-50/50">
       <SideBar />
@@ -83,20 +82,27 @@ const Graphics = () => {
         <div>graphicassassssss</div>
         <div>
           {/* Envuelve el componente BubbleChart con un contenedor div */}
-          {/* <BubbleChart /> */}
+          <BubbleChart />
         </div>
       </div>
-      <div className=" p-4 xl:ml-80">
-        <p className="font-bold text-xl text-blue-700 ">
+      <div className="p-4 xl:ml-80">
+        <p className="font-bold text-xl text-blue-700">
           Rendimiento del personal en tareas actuales
         </p>
-        <div>
-          {/* Envuelve el componente BubbleChart con un contenedor div
-          
-          La grafica revelara los pendientes de nuestros empleados segun sus operaciones activas asignadas con el fin de ver
-          la productividad o retraso en tiempo real de dichas tareas
-          */}
-          <Grafica3/>
+        <div className="text-center mx-auto w-full max-w-xl">
+          {/* 
+    La grafica revelara los pendientes de nuestros empleados segun sus operaciones activas asignadas con el fin de ver
+    la productividad o retraso en tiempo real de dichas tareas
+    */}
+          <div className="text-left w-full">
+            <p className="text-gray-500/100 mx-3 px-3">
+              ----- Para consultar el control de tareas por almacenista pasa el
+              cursor sobre la grafica ---
+            </p>
+          </div>
+          <div>
+            <Grafica3 />
+          </div>
         </div>
       </div>
     </div>

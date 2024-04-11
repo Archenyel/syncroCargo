@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEdit, faArrowRight, faBusinessTime } from "@fortawesome/free-solid-svg-icons";
 import IP from "../components/IP";
 import SideBar from "./SideBar";
+import { faUpwork } from "@fortawesome/free-brands-svg-icons";
 
 const Operations = () => {
   const [inputValue, setInputValue] = useState("");
@@ -241,22 +242,24 @@ const Operations = () => {
     data.append("descripcion", formData.descripcion);
     data.append("cantidad", formData.cantidad);
     data.append("cortina", formData.cortina);
-
-    const url = `${IP.IPUrl}/cambio_operacion`;
-
-    axios
-      .post(url, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        limpiar();
-        fetchUsers();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+     console.log(JSON.stringify(Object.fromEntries(data.entries())));
+      const url = `${IP.IPUrl}/cambio_operacion`;
+      axios
+        .post(url, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+           toast.success('Operacion Actualizada');
+          limpiar();
+          setEditar(false);
+          fetchUsers();
+        })
+        .catch((error) => {
+          toast.error('Error al actualizar operacion');
+          console.error(error);
+        });
   };
 
   const cambiarEstatus = (id, estatus) => {
@@ -327,10 +330,19 @@ const Operations = () => {
             </h1>
             <button
               onClick={() => fetchUsers("activas")}
-              className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
+              className="btn rounded bg-green-600/100 p-2 text-white font-bold m-4 hover:bg-green-500/100"
             >
-              {" "}
-              ver operaciones activas
+              <p>
+                ver operaciones activas
+              </p>
+              <FontAwesomeIcon icon={faArrowRight}/>
+            </button>
+            <button
+              onClick={() => fetchUsers("pendientes")}
+              className="btn rounded bg-orange-600/100 p-2 text-white font-bold m-4 hover:bg-orange-800/100"
+            >
+              <span className="mr-2">Ver operaciones pendientes</span>
+             <FontAwesomeIcon icon={faBusinessTime}/>
             </button>
             <button
               onClick={() => fetchUsers("concluidas")}
@@ -339,19 +351,11 @@ const Operations = () => {
               {" "}
               ver operaciones concluidas
             </button>
-            <button
-              onClick={() => fetchUsers("pendientes")}
-              className="btn rounded bg-sky-600 p-2 text-white font-bold m-4"
-            >
-              {" "}
-              Ver operaciones pendientes
-            </button>
             <div className="overflow-x-auto">
               <table className="table-auto text-center w-full border-collapse border-2 border-teal-500">
                 <caption className="caption-top m-3">
                   Tabla de operaciones
                 </caption>
-                {console.log(data)}
                 <thead className="border border-teal-700 pb-3">
                   <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
                     <th>ID</th>
@@ -408,7 +412,7 @@ const Operations = () => {
                         {operacion.cantidad}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {operacion.cortina && operacion.cortina != 99
+                        {operacion.cortina && operacion.cortina !== '4'
                           ? operacion.cortina
                           : "sin asignar"}
                       </td>
@@ -446,171 +450,177 @@ const Operations = () => {
                 Actualizar Operacion
               </h2>
               <table className="table-auto text-center border-4 border-sky-700">
-                <tr>
-                  <th> Datos </th>
-                  <th>Valores actuales:</th>
-                  <th>Valores nuevos</th>
-                </tr>
-                <tr>
-                  <th>ID:</th>
-                  <td>{formData2.id}</td>
-                  <td>{formData2.id}</td>
-                </tr>
-                <tr>
-                  <th>Empresa:</th>
-                  <td>{formData2.empresa}</td>
-                  <td>
-                    <input
-                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
-                      type="text"
-                      id="empresa"
-                      name="empresa"
-                      value={formData.empresa}
-                      onChange={handleChange}
-                      readOnly
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Tipo de operacion:</th>
-                  <td>{formData2.tipo == "0" ? "Descarga" : "Carga"}</td>
-                  <td>
-                    <input
-                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
-                      type="text"
-                      id="tipo"
-                      name="tipo"
-                      value={formData.tipo}
-                      onChange={handleChange}
-                      readOnly
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Operador:</th>
-                  <td>{formData2.operador}</td>
-                  <td>
-                    <select
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      name="operador"
-                      id="operador"
-                      value={formData.operador}
-                      onChange={handleChange}
-                    >
-                      <option> Operador </option>
-                      {operadores.map((empleados) => (
-                        <option value={empleados.id}>{empleados.nombre}</option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Almacenista:</th>
-                  <td>{formData2.almacenista}</td>
-                  <td>
-                    <select
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      name="almacenista"
-                      id="almacenista"
-                      value={formData.almacenista}
-                      onChange={handleChange}
-                    >
-                      <option> almacenista </option>
-                      {almacenistas.map((empleados) => (
-                        <option value={empleados.id}>{empleados.nombre}</option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Producto:</th>
-                  <td>{formData2.producto}</td>
-                  <td>
-                    <input
-                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
-                      type="text"
-                      id="producto"
-                      name="producto"
-                      value={formData.producto}
-                      onChange={handleChange}
-                      readOnly
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Descripcion:</th>
-                  <td>{formData2.descripcionOperacion}</td>
-                  <td>
-                    <input
-                      className=" rounded border-2 border-teal-700/100 mt-4 mx-4 p-5"
-                      type="text"
-                      id="descripcion"
-                      name="descripcion"
-                      value={formData.descripcion}
-                      onChange={handleChange}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Cantidad:</th>
-                  <td>{formData2.cantidad}</td>
-                  <td>
-                    <input
-                      className=" rounded border-2 border-teal-700/100 mt-4 text-center"
-                      type="text"
-                      id="cantidad"
-                      name="cantidad"
-                      value={formData.cantidad}
-                      onChange={handleChange}
-                      readOnly
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Cortina:</th>
-                  <td>
-                    {formData2.cortina && formData2.cortina != 99
-                      ? formData2.cortina
-                      : "Sin asignar"}
-                  </td>
-                  <td>
-                    <select
-                      className="rounded border-2 border-teal-700/100 m-3"
-                      name="cortina"
-                      id="cortina"
-                      onChange={handleChange}
-                    >
-                      <option value="">Selecciona una cortina</option>
-                      {cortinas.map((cortina) => (
-                        <option key={cortina.id} value={cortina.id}>
-                          {cortina.numero}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <th>acciones</th>
-                  <td>
-                    <button
-                      onClick={() => {
-                        setEditar(false);
-                        limpiar();
-                      }}
-                      className="btn bg-gray-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
-                    >
-                      {"cancelar".toLocaleUpperCase()}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => actualizar()}
-                      className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
-                    >
-                      {"actualizar".toLocaleUpperCase()}
-                    </button>
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <th> Datos </th>
+                    <th>Valores actuales:</th>
+                    <th>Valores nuevos</th>
+                  </tr>
+                  <tr>
+                    <th>ID:</th>
+                    <td>{formData2.id}</td>
+                    <td>{formData2.id}</td>
+                  </tr>
+                  <tr>
+                    <th>Empresa:</th>
+                    <td>{formData2.empresa}</td>
+                    <td>
+                      <input
+                        className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                        type="text"
+                        id="empresa"
+                        name="empresa"
+                        value={formData.empresa}
+                        onChange={handleChange}
+                        readOnly
+                      ></input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Tipo de operacion:</th>
+                    <td>{formData2.tipo == "0" ? "Descarga" : "Carga"}</td>
+                    <td>
+                      <input
+                        className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                        type="text"
+                        id="tipo"
+                        name="tipo"
+                        value={formData.tipo}
+                        onChange={handleChange}
+                        readOnly
+                      ></input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Operador:</th>
+                    <td>{formData2.operador}</td>
+                    <td>
+                      <select
+                        className="rounded border-2 border-teal-700/100 m-3"
+                        name="operador"
+                        id="operador"
+                        value={formData.operador}
+                        onChange={handleChange}
+                      >
+                        <option> Operador </option>
+                        {operadores.map((empleados) => (
+                          <option value={empleados.id}>
+                            {empleados.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Almacenista:</th>
+                    <td>{formData2.almacenista}</td>
+                    <td>
+                      <select
+                        className="rounded border-2 border-teal-700/100 m-3"
+                        name="almacenista"
+                        id="almacenista"
+                        value={formData.almacenista}
+                        onChange={handleChange}
+                      >
+                        <option> almacenista </option>
+                        {almacenistas.map((empleados) => (
+                          <option value={empleados.id}>
+                            {empleados.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Producto:</th>
+                    <td>{formData2.producto}</td>
+                    <td>
+                      <input
+                        className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                        type="text"
+                        id="producto"
+                        name="producto"
+                        value={formData.producto}
+                        onChange={handleChange}
+                        readOnly
+                      ></input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Descripcion:</th>
+                    <td>{formData2.descripcionOperacion}</td>
+                    <td>
+                      <input
+                        className=" rounded border-2 border-teal-700/100 mt-4 mx-4 p-5"
+                        type="text"
+                        id="descripcion"
+                        name="descripcion"
+                        value={formData.descripcion}
+                        onChange={handleChange}
+                      ></input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Cantidad:</th>
+                    <td>{formData2.cantidad}</td>
+                    <td>
+                      <input
+                        className=" rounded border-2 border-teal-700/100 mt-4 text-center"
+                        type="text"
+                        id="cantidad"
+                        name="cantidad"
+                        value={formData.cantidad}
+                        onChange={handleChange}
+                        readOnly
+                      ></input>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Cortina:</th>
+                    <td>
+                      {formData2.cortina && formData2.cortina != 99
+                        ? formData2.cortina
+                        : "Sin asignar"}
+                    </td>
+                    <td>
+                      <select
+                        className="rounded border-2 border-teal-700/100 m-3"
+                        name="cortina"
+                        id="cortina"
+                        onChange={handleChange}
+                      >
+                        <option value="null" > Sin asignar</option>
+                        {cortinas.map((cortina) => (
+                          <option key={cortina.id} value={cortina.id}>
+                            {cortina.numero}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>acciones</th>
+                    <td>
+                      <button
+                        onClick={() => {
+                          setEditar(false);
+                          limpiar();
+                        }}
+                        className="btn bg-gray-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
+                      >
+                        {"cancelar".toLocaleUpperCase()}
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => actualizar()}
+                        className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
+                      >
+                        {"actualizar".toLocaleUpperCase()}
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </>
           ) : (
