@@ -168,6 +168,15 @@ const Operations = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar el formulario antes de enviar la solicitud
+    const isValid = validateForm();
+
+    if (!isValid) {
+      // Si la validación falla, muestra el mensaje de advertencia
+      toast.warning("Llena el formulario correctamente");
+      return;
+    }
+
     const data = new FormData();
     data.append("empresa", formData.empresa);
     data.append("tipo", formData.tipo);
@@ -178,20 +187,40 @@ const Operations = () => {
     data.append("cantidad", formData.cantidad);
     data.append("estatus", formData.estatus);
 
-    console.log(formData);
     const url = `${IP.IPUrl}/nueva_operacion`;
-    const response = await fetch(url, {
-      method: "POST",
-      body: data,
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-      toast.success("Se ha agregado una operacion");
-      limpiar();
-    } else {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+        toast.success("Se ha agregado una operacion");
+        limpiar();
+      } else {
+        toast.error("Error al agregar la operacion");
+      }
+    } catch (error) {
+      console.error("Error:", error);
       toast.error("Error al agregar la operacion");
     }
+  };
+
+  const validateForm = () => {
+    if (
+      formData.empresa === "" ||
+      formData.tipo === "" ||
+      formData.producto === "" ||
+      formData.cantidad === "" ||
+      formData.operador === "" ||
+      formData.almacenista === "" ||
+      formData.descripcion === ""
+    ) {
+      return false;
+    }
+    return true;
   };
 
   const actualizar = (e) => {
@@ -306,7 +335,9 @@ const Operations = () => {
             </button>
             <div className="overflow-x-auto">
               <table className="table-auto text-center w-full border-collapse border-2 border-teal-500">
-                <caption className="caption-top m-3">Tabla de operaciones</caption>
+                <caption className="caption-top m-3">
+                  Tabla de operaciones
+                </caption>
                 {console.log(data)}
                 <thead className="border border-teal-700 pb-3">
                   <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
