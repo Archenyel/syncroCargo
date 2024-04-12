@@ -29,15 +29,15 @@ const Graphics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const citiesCollection = collection(db, "sensores");
+        const citiesCollection = collection(db, "Sensores");
         const citySnapshot = await getDocs(citiesCollection);
         const data = citySnapshot.docs.map((doc) => doc.data());
 
         setData(data);
 
         const recuentos = {};
-        data.forEach(({ lugar }) => {
-          recuentos[lugar] = (recuentos[lugar] || 0) + 1;
+        data.forEach(({ cortina }) => {
+          recuentos[cortina] = (recuentos[cortina] || 0) + 1;
         });
 
         setCategorias(Object.values(recuentos));

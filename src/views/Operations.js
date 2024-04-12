@@ -366,7 +366,7 @@ const Operations = () => {
                     <th>Producto</th>
                     <th>Descripcion</th>
                     <th>Cantidad</th>
-                    <th>Cortina</th>
+                    <th>ID cortina</th>
                     <th>Estatus</th>
                     <th>Editar</th>
                     <th>Baja</th>
@@ -412,7 +412,7 @@ const Operations = () => {
                         {operacion.cantidad}
                       </td>
                       <td className="border-2 border-teal-500 ">
-                        {operacion.cortina && operacion.cortina !== '4'
+                        {operacion.cortina && operacion.numortina !== '4'
                           ? operacion.cortina
                           : "sin asignar"}
                       </td>
