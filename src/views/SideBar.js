@@ -1,17 +1,16 @@
 import React,{useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
 export default function SideBar() {
   const navigation = useNavigate();
-  // useEffect(()=>{
-  //   //Chequeo de usuario correspondiente por si descubren alguna ruta y quieren explotarla
-  //   const userStored = JSON.parse(sessionStorage.getItem('user'))
-  //   if(userStored === null || userStored === undefined){
-  //     navigation('/Login');
-  //   }
-  //   console.log(userStored);
-  // },[navigation])
+  useEffect(()=>{
+    //Chequeo de usuario correspondiente por si descubren alguna ruta y quieren explotarla
+    const userStored = JSON.parse(sessionStorage.getItem('user'))
+    if(userStored === null || userStored === undefined){
+      navigation('/Login');
+    }
+    console.log(userStored);
+  },[navigation])
   //ERROR SI DA FLECHA ATRAS REINICIAR NAVEGACION AL HACER LOGOUT
   const handleLogout = ()=> {
     sessionStorage.removeItem('user');

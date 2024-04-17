@@ -13,16 +13,16 @@ import SideBar from './views/SideBar';
 const Navegation = () => {
   return (
     <Routes>
-          <Route index Component={Login} />
-          <Route path="Login" Component={Login} /> 
-          <Route path="Operations" Component={Operations}/> 
-          <Route path='SideBar' Component={SideBar}/> 
-          <Route path="Personal" Component={Personal } /> 
-          <Route path="Graphics" Component={Graphics } /> 
-          <Route path="Cortinas" Component={Cortinas } /> 
-          <Route path="Products" Component={Products } /> 
-          <Route path="Companies" Component={Companies }/>
-      </Routes>
+        <Route index Component={Login} />
+        <Route path="/Login" Component={Login} /> 
+        <Route path="/Operations" Component={Operations}/> 
+        <Route path='/SideBar' Component={SideBar}/> 
+        <Route path="/Personal" Component={Personal } /> 
+        <Route path="/Graphics" Component={Graphics } /> 
+        <Route path="/Cortinas" Component={Cortinas } /> 
+        <Route path="/Products" Component={Products } /> 
+        <Route path="/Companies" Component={Companies }/>
+    </Routes>
   )
 }
 

@@ -2,50 +2,78 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const BubbleChart = () => {
-  const data1 = [3, 4, 3, 5, 4, 10, 12];
-  const data2 = [1, 3, 2, 4, 5, 7, 9];
-  const data3 = [2, 5, 4, 6, 7, 11, 14];
+const BubbleChart = (props) => {
+  const data1 = props.temperatura;
+  const data2 = props.humedad;
 
-  const options = {
+  const optionsTemperatura = {
     chart: {
       type: 'area'
     },
     title: {
-      text: 'Gráfico de Área Triple'
+      text: 'Gráfico de Área de Temperatura'
     },
     xAxis: {
-      categories: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+      categories: props.fechas
     },
     yAxis: {
+      min: 0,
+      max: 100,
       title: {
-        text: 'Valores'
+        text: 'Escala'
       }
     },
     plotOptions: {
       area: {
         stacking: 'normal',
-        fillOpacity: 0.5 // Controla la opacidad del relleno del área
+        fillOpacity: 0.5
       }
     },
     series: [{
-      name: 'Área 1',
+      name: 'temperatura',
       data: data1,
-      color: 'rgba(255, 0, 0, 0.5)' // Color del área 1 con opacidad reducida
-    }, {
-      name: 'Área 2',
+      color: 'green'
+    }]
+  };
+
+  const optionsHumedad = {
+    chart: {
+      type: 'area'
+    },
+    title: {
+      text: 'Gráfico de Área de Humedad'
+    },
+    xAxis: {
+      categories: props.fechas
+    },
+    yAxis: {
+      min: 0,
+      max: 100,
+      title: {
+        text: 'Escala'
+      }
+    },
+    plotOptions: {
+      area: {
+        stacking: 'normal',
+        fillOpacity: 0.5
+      }
+    },
+    series: [{
+      name: 'humedad',
       data: data2,
-      color: 'rgba(0, 0, 255, 0.5)' // Color del área 2 con opacidad reducida
-    }, {
-      name: 'Área 3',
-      data: data3,
-      color: 'rgba(0, 255, 0, 0.5)' // Color del área 3 con opacidad reducida
+      color: 'rgba(0, 0, 255, 0.5)'
     }]
   };
 
   return (
     <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
+      <div>
+        <HighchartsReact highcharts={Highcharts} options={optionsTemperatura} />
+      </div>
+      <div>
+        <HighchartsReact highcharts={Highcharts} options={optionsHumedad} />
+      </div>
     </div>
   );
 };

@@ -3,21 +3,19 @@ import { PieChart, Pie, Sector } from "recharts";
 import IP from './IP';
 
 
-const dataExample = [
-  { name: "Almacenista 1", value: '4'},
-  { name: "Almacenista 2", value: 1 },
-  { name: "Maiklo", value: 3 },
-  { name: "Juan Diaz", value: 2 }
-];
-
-
-//Creacion correcta del data deseado despues de la respuesta del servidor
-let data = dataExample.map(empleado =>(
-  {
-    name: empleado.name,
-    value: parseInt(empleado.value)
-  }
-))
+// const dataExample = [
+//   { name: "Almacenista 1", value: '4'},
+//   { name: "Almacenista 2", value: 1 },
+//   { name: "Maiklo", value: 3 },
+//   { name: "Juan Diaz", value: 2 }
+// ];
+// //Creacion correcta del data deseado despues de la respuesta del servidor
+// let data = dataExample.map(empleado =>(
+//   {
+//     name: empleado.name,
+//     value: parseInt(empleado.value)
+//   }
+// ))
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -101,34 +99,33 @@ const renderActiveShape = (props) => {
 };
 
 export default function Grafica3() {
-  const [employes, setEmployes]= useState(data);
+  const [employes, setEmployes]= useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  useEffect(()=>{
-    //Empleo funcion anonima para fetchear datos y obtener un graficado real
-    (async()=>{
-      const response = await fetch(`${IP.IPUrl}/get_dataWork`,{
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(`${IP.IPUrl}/get_dataWork`, {
+        method: 'POST',
         headers: {
-          'Content-Type':'application/json'
-        }
-      })
-      if(response.ok){
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
         const result = await response.json();
         console.log(result);
-        setEmployes(result.data);
-      }
-      else{
+        console.log(result.data);
+        // Convertir el valor de 'value' a tipo entero
+        const data = result.data.map(empleado => ({
+          name: empleado.name,
+          value: parseInt(empleado.value, 10), // Usar parseInt y especificar la base
+        }));
+        console.log(JSON.stringify(data)); // Compruebo la data y seteo mi estado
+        setEmployes(data);
+      } else {
         console.log('ERROR FETCHING');
       }
-      let data = employes.map(empleado =>(
-        {
-          name: empleado.name,
-          value: parseInt(empleado.value)
-        }
-      ))
-      console.log(JSON.stringify(data));//compruebo la data y seteo mi estado
-      setEmployes(data);
-    })() //ejecuto la funcion automatica
-  },[])
+    })();
+  }, []);
+  
   const onPieEnter = useCallback(
     (_, index) => {
       setActiveIndex(index);

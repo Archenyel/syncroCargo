@@ -1,5 +1,6 @@
 {
-  "name": "sincro",
+  "name": "syncrocargo",
+  "homepage": "http://dtai.uteq.edu.mx/~aarrey213/integradora/app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

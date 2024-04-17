@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SideBar from "./SideBar";
-import IP from '../components/IP';
+import IP from "../components/IP";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {ToastContainer, toast} from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { faEdit, faExchange } from "@fortawesome/free-solid-svg-icons";
 const Cortinas = () => {
   const [users, setUsers] = useState([]);
@@ -27,11 +27,8 @@ const Cortinas = () => {
   //peticion usando fetch nativo de js para obtener los datos del backend de los empleados
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        `${IP.IPUrl}/get_cortinas`
-      );
+      const response = await axios.get(`${IP.IPUrl}/get_cortinas`);
       setUsers(response.data.cortinas);
-      toast.success('Cortinas consultadas')
     } catch (error) {
       console.error("Error:", error);
     }
@@ -63,9 +60,11 @@ const Cortinas = () => {
       .then((response) => {
         limpiar();
         fetchUsers();
+        toast.success('Cortina agregada exitosamente!')
       })
       .catch((error) => {
         console.error(error);
+        toast.error('Error al agregar la cortina!')
       });
   };
 
@@ -83,9 +82,11 @@ const Cortinas = () => {
       })
       .then((response) => {
         fetchUsers();
+        toast.success('Cortina "eliminada" exitosamente!')
       })
       .catch((error) => {
         console.error(error);
+        toast.error('Error al eliminar la cortina!')
       });
   };
 
@@ -108,9 +109,11 @@ const Cortinas = () => {
       .then((response) => {
         limpiar();
         fetchUsers();
+        toast.success('Cortina actualiada exitosamente!')
       })
       .catch((error) => {
         console.error(error);
+        toast.error('Error al eliminar la cortina!')
       });
   };
 
@@ -121,63 +124,68 @@ const Cortinas = () => {
         <>
           <div className="App">
             <h1 className="font-semibold text-2xl mt-7">Lista de Cortinas</h1>
-          <button
-            className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold my-4"
-            onClick={fetchUsers}
-          >
-            {" "}
-            ver cortinas
-          </button>
+            <button
+              className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold my-4"
+              onClick={fetchUsers}
+            >
+              {" "}
+              ver cortinas
+            </button>
             <div className="overflow-x-auto">
-            <table className="table-auto text-center w-1/4 border-collapse border-2 border-teal-500">
-            <caption className="caption-top m-3">Tabla de Cortinas</caption>
-              <thead>
-                <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
-                  <th>ID</th>
-                  <th>Numero</th>
-                  <th>Estatus</th>
-                  <th>Editar</th>
-                  <th>Estatus</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id} 
-                  className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
-                  >
-                    <td className="">{user.id}</td>
-                    <td className="">{user.numero}</td>
-                    <td className="">{user.estatus}</td>
-                    <td className="">
-                      <button
-                        className="btn bg-blue-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
-                        onClick={() => {
-                          editarCampos(user);
-                          setEditar(true);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEdit}/>
-                      </button>
-                    </td>
-                    <td className="p-3">
-                      <button
-                        className="btn bg-red-600/100 hover:bg-orange-500 rounded text-white p-2 font-semibold"
-                        onClick={() => cambiarEstatus(user.id)}
-                      >
-                        <FontAwesomeIcon icon={faExchange}/>
-                      </button>
-                    </td>
+              <table className="table-auto text-center w-1/4 border-collapse border-2 border-teal-500">
+                <caption className="caption-top m-3">Tabla de Cortinas</caption>
+                <thead>
+                  <tr className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
+                    <th>ID</th>
+                    <th>Numero</th>
+                    <th>Estatus</th>
+                    <th>Editar</th>
+                    <th>Estatus</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr
+                      key={user.id}
+                      className="hover:bg-zinc-600 hover:text-white hover:font-semibold border-2 border-teal-500"
+                    >
+                      <td className="">{user.id}</td>
+                      <td className="">{user.numero}</td>
+                      <td className="">{user.estatus}</td>
+                      <td className="">
+                        <button
+                          className="btn bg-blue-600/100 hover:bg-gray-400 rounded text-white p-2 font-semibold"
+                          onClick={() => {
+                            editarCampos(user);
+                            setEditar(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                      </td>
+                      <td className="p-3">
+                        <button
+                          className="btn bg-red-600/100 hover:bg-orange-500 rounded text-white p-2 font-semibold"
+                          onClick={() => cambiarEstatus(user.id)}
+                        >
+                          <FontAwesomeIcon icon={faExchange} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
           <br />
           <br />
           <br />
           <div>
-            {editar ? <h1 className="font-semibold text-2xl mt-7"> Editar Cortina</h1> : <h1 className="font-semibold text-2xl mt-7">Registrar cortina</h1>}
+            {editar ? (
+              <h1 className="font-semibold text-2xl mt-7"> Editar Cortina</h1>
+            ) : (
+              <h1 className="font-semibold text-2xl mt-7">Registrar cortina</h1>
+            )}
             <form onSubmit={editar ? actualizar : handleSubmit}>
               <div>
                 <label>Numero:</label>
@@ -194,13 +202,28 @@ const Cortinas = () => {
                 className="btn bg-green-600/100 hover:bg-green-400 rounded text-white p-2 font-semibold"
                 type="submit"
               >
-                {editar ? "actualizar".toUpperCase() : "registrar".toUpperCase()}
+                {editar
+                  ? "actualizar".toUpperCase()
+                  : "registrar".toUpperCase()}
               </button>
+              {editar ? (
+                <button
+                  className="btn bg-gray-600/100 hover:bg-gray-400 rounded text-white p-2 mx-3 font-semibold"
+                  onClick={() => {
+                    setEditar(false);
+                    limpiar();
+                  }}
+                >
+                  Cancelar
+                </button>
+              ) : (
+                <></>
+              )}
             </form>
           </div>
         </>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
