@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
-import IP from "../components/IP";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import Grafica3 from "../components/Grafica3";
+import Grafico4 from "../components/Grafica4";
 import BubbleChart from "../components/Grafica2";
 
 const firebaseConfig = {
@@ -22,13 +22,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+//Traer mis datos para grafica de dispersion
+const docRef = collection(db, "Sensores");
+const docSnap = async () => {
+  await getDocs(docRef);
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
+};
+
 const Graphics = () => {
   const [data, setData] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [temp, setTemp] = useState([]);
   const [hum, setHum] = useState([]);
   const [fecha, setFecha] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +49,9 @@ const Graphics = () => {
 
         setData(data);
 
-        console.log(data);
+        console.log('HOLAAAA',data);
+
+
 
         const recuentos = {};
         data.forEach(({ cortina }) => {
@@ -46,23 +59,20 @@ const Graphics = () => {
         });
 
         setCategorias(Object.values(recuentos));
-
-        const temperatura = data.map(item => item.temperatura);
-        const humedad = data.map(item => item.humedad);
-        const fechas = data.map(item => item.fechaInicio);
+        const temperatura = data.map((item) => item.temperatura);
+        const humedad = data.map((item) => item.humedad);
+        const fechas = data.map((item) => item.fechaInicio);
 
         setTemp(temperatura);
         setHum(humedad);
-        
 
-        const fechasSolo = fechas.map(fechaString => {
+        const fechasSolo = fechas.map((fechaString) => {
           const fecha = new Date(fechaString);
           return fecha.toLocaleDateString(); // Extraer la fecha en formato local
         });
-        
-        setFecha(fechasSolo);
-        console.log(fechasSolo);
 
+        setFecha(fechasSolo);
+        //console.log(fechasSolo);
       } catch (error) {
         console.error("Error al obtener datos de Firestore:", error);
       }
@@ -97,21 +107,20 @@ const Graphics = () => {
     <div className="min-h-screen bg-gray-50/50">
       <SideBar />
       <div className=" p-4 xl:ml-80">
-        <div>graficas de Rendiminto</div>
-        <HighchartsReact highcharts={Highcharts} options={options}/>
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
       <div className=" p-4 xl:ml-80">
-        <BubbleChart temperatura={temp} humedad={hum} fechas={fecha}/>
+        <BubbleChart temperatura={temp} humedad={hum} fechas={fecha} />
       </div>
       <div className="p-4 xl:ml-80">
         <p className="font-bold text-xl text-blue-700">
-          Rendimiento del personals en tareas actuales
+          Rendimiento del personal en tareas actuales
         </p>
         <div className="text-center mx-auto w-full max-w-xl">
           {/* 
-    La grafica revelara los pendientes de nuestros empleados segun sus operaciones activas asignadas con el fin de ver
-    la productividad o retraso en tiempo real de dichas tareas
-    */}
+          La grafica revelara los pendientes de nuestros empleados segun sus operaciones activas asignadas con el fin de ver
+          la productividad o retraso en tiempo real de dichas tareas
+          */}
           <div className="text-left w-full">
             <p className="text-gray-500/100 mx-3 px-3">
               ----- Para consultar el control de tareas por almacenista pasa el
@@ -121,6 +130,22 @@ const Graphics = () => {
           <div>
             <Grafica3 />
           </div>
+        </div>
+      </div>
+      <div className="p-4 xl:ml-80">
+        <p className="font-bold text-2xl text-blue-700/100">
+          Grafico de dispersion
+        </p>
+        <div className="text-center mx-auto w-full max-w-xl">
+          <p className="w-xl">
+            El grafico nos representa Temperatura y Humedad 
+          </p>
+            <span className=" m-3 text-purple-300/100">Morado cortina 1</span> 
+            <span className="m-3 text-green-300/100">Verde cortina 2</span>
+          {data[0]?
+          <Grafico4 dataResponse={data}/>
+          :<></>
+          }
         </div>
       </div>
     </div>
